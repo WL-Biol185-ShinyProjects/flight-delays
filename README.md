@@ -1,8 +1,11 @@
 # flight-delays
-Analysis of flight delay data from 2009 -2020
+Analysis of flight delay data from 2009-2020
 
-https://www.kaggle.com/code/adveros/flight-delay-eda-exploratory-data-analysis
+https://www.kaggle.com/datasets/sherrytp/airline-delay-analysis/data
 
+https://www.kaggle.com/datasets/aravindram11/list-of-us-airports
+
+<<<<<<< HEAD
 https://www.kaggle.com/datasets/aravindram11/list-of-us-airports
 
 Project Plan:
@@ -25,3 +28,4 @@ Plot flight paths on map with origin and final destination using:
  Flight Finder
     User inputs: date of travel, origin, destination
     Page displays: airline/ flight options, flight times, average delay of flight options
+
