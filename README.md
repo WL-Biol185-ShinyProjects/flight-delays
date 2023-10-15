@@ -5,7 +5,6 @@ https://www.kaggle.com/datasets/sherrytp/airline-delay-analysis/data
 
 https://www.kaggle.com/datasets/aravindram11/list-of-us-airports
 
-<<<<<<< HEAD
 https://www.kaggle.com/datasets/aravindram11/list-of-us-airports
 
 Project Plan:
@@ -28,4 +27,8 @@ Plot flight paths on map with origin and final destination using:
  Flight Finder
     User inputs: date of travel, origin, destination
     Page displays: airline/ flight options, flight times, average delay of flight options
+    multi city capability that lets you add multiple cities
 
+
+ Side of the plane to sit on based on city location relative to the aiport
+ 

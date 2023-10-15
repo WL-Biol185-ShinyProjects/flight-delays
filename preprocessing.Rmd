@@ -1,0 +1,80 @@
+---
+title: "Pre-processing"
+output: html_document
+---
+
+# Pre-processing to combine years of flights data
+
+```{r}
+library(tidyverse)
+library(readr)
+```
+
+Make sure the directory with all data .csv files are in subdirectory "data" of our 
+
+```{r eval=FALSE}
+system("mv data/20.csv data/2020.csv")
+```
+
+```{r}
+parse_table <- function(fileName) { 
+                read_csv( file.path("data", fileName, fsep = "/")
+                        , col_select = c( "FL_DATE"
+                                        , "OP_CARRIER"
+                                        , "OP_CARRIER_FL_NUM"
+                                        , "ORIGIN"
+                                        , "DEST"
+                                        , "DEP_DELAY"
+                                        , "ARR_DELAY"
+                                        , "CANCELLED"
+                                        , "CARRIER_DELAY"
+                                        , "WEATHER_DELAY"
+                                        , "NAS_DELAY"
+                                        , "SECURITY_DELAY"
+                                        , "LATE_AIRCRAFT_DELAY"
+                                        )
+                        , col_types = cols(OP_CARRIER = col_factor(levels = c( "9E"
+                                                                             , "AA"
+                                                                             , "MQ"
+                                                                             , "G4"
+                                                                             , "OH"
+                                                                             , "B6"
+                                                                             , "YV"
+                                                                             , "EV"
+                                                                             , "F9"
+                                                                             , "YX"
+                                                                             , "HA"
+                                                                             , "NK"
+                                                                             , "UA"
+                                                                             , "OO"
+                                                                             , "WN"
+                                                                             , "AS"
+                                                                             , "DL"
+                                                                             )
+                                                                   )
+                                           )
+                        )
+}
+```
+
+```{r}
+# using non-vectorized to reduce memory consumption
+# 2015-2018 and 2020; 2019 is garbage
+
+flights <- data.frame()
+
+for (n in c(2015:2018, 2020)) {
+  file    <- paste0(n, ".csv")
+  flights <- rbind(flights, parse_table(file))
+  gc()
+}
+```
+
+```{r}
+saveRDS(flights, file = "data/flights.rds")
+```
+
+```{r}
+# read_csv_chunked allows for table streaming
+```
+
