@@ -61,6 +61,9 @@ parse_table <- function(fileName) {
 # using non-vectorized to reduce memory consumption
 # 2015-2018 and 2020; 2019 is garbage
 
+# to do is removing 2020 we dont need it
+# split up the tables
+
 flights <- data.frame()
 
 for (n in c(2015:2018, 2020)) {
@@ -77,4 +80,5 @@ saveRDS(flights, file = "data/flights.rds")
 ```{r}
 # read_csv_chunked allows for table streaming
 ```
+
 

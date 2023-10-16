@@ -7,6 +7,8 @@ https://www.kaggle.com/datasets/aravindram11/list-of-us-airports
 
 https://www.kaggle.com/datasets/aravindram11/list-of-us-airports
 
+https://www.kaggle.com/datasets/efehandanisman/skytrax-airline-reviews
+
 Project Plan:
 
 
