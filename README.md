@@ -5,9 +5,9 @@ https://www.kaggle.com/datasets/sherrytp/airline-delay-analysis/data
 
 https://www.kaggle.com/datasets/aravindram11/list-of-us-airports
 
-https://www.kaggle.com/datasets/aravindram11/list-of-us-airports
-
 https://www.kaggle.com/datasets/efehandanisman/skytrax-airline-reviews
+
+https://www.kaggle.com/datasets/sergejnuss/united-states-cities-database
 
 Project Plan:
 
