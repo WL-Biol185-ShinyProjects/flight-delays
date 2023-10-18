@@ -149,6 +149,38 @@ delay.types$LATE_AIRCRAFT_DELAY <- sapply(delay.types$OP_CARRIER, function(x) {
 
 
 ```{r}
+View(airports)
+library(readr)
+uscities <- read_csv('data/uscities.csv)
+colnames(airports)[colnames(airports) == "LATITUDE"] <- "AIRPORT LATITUDE"
+colnames(airports)[colnames(airports) == "LONGITUDE"] <- "AIRPORT LONGITUDE"
+uscities_sub <- uscities[, c("city", "lat", "lng")]
+merged_data <- merge(airports, uscities_sub, by.x="city", by.y = "city", all.x=TRUE)
+uscities_sub <- uscities[, c("city", "lat", "lng")]
+merged_data <- merge(airports, uscities_sub, by.x="CITY", by.y = "city", all.x=TRUE)
+View(merged_data)
+duplicateRows <- duplicated(airports$CITY)
+merged_data <- merge(airports, uscities_sub, by.x="CITY", by.y = "city")
+View(merged_data)
+uscities_sub <- uscities[, c("city", "state_id", "lat", "lng")]
+View(uscities_sub)
+uscities_sub <- uscities[, c("city", "state_id", "lat", "lng")]
+merged_data <- merge(airports, uscities_sub, by.x=c("CITY", "STATE"), by.y=c("city", "state_id"))
+duplicateRows <- duplicated(airports$CITY)
+merged_data <- merge(airports, uscities_sub, by.x="CITY", by.y = "city")
+View(merged_data)
+uscities_sub <- uscities[, c("city", "state_id", "lat", "lng")]
+View(uscities_sub)
+uscities_sub <- uscities[, c("city", "state_id", "lat", "lng")]
+merged_data <- merge(airports, uscities_sub, by.x=c("CITY", "STATE"), by.y=c("city", "state_id"))
+View(merged_data)
+library(tidyverse)
+airports_merged <- merged_data %>%
+  mutate(Location = paste0(merged_data$AIRPORT, 
+                           ' (', merged_data$IATA, ')'))
+saveRDS(merged_data, file = 'data/airports.rds')
+airports_merged = airports_merged %>% rename('LOCATION' = 'Location')
+saveRDS(airports_merged, file = 'data/airports-merged.rds')
 ```
 
 ```{r}
