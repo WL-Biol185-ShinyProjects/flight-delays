@@ -88,5 +88,5 @@ merged_data %>%
   mutate(Location = paste0(merged_data$AIRPORT, 
                            '(', merged_data$IATA, ')'))
 
-
+saveRDS(merged_data, file = 'data/airports.rds')
 
