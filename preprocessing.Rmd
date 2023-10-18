@@ -8,6 +8,7 @@ output: html_document
 ```{r}
 library(tidyverse)
 library(readr)
+library(readxl)
 ```
 
 ```{r}
@@ -144,11 +145,19 @@ delay.types$LATE_AIRCRAFT_DELAY <- sapply(delay.types$OP_CARRIER, function(x) {
                                                                   }
                                          )
 
-
+delay.types <- delay.types[-7,]
+saveRDS(delay.types, file = "data/delay_types.rds")
 ```
 
+# Cleaning the Review table
 
 ```{r}
+reviews <- read_excel("data/capstone_airline_reviews3.xlsx")
+```
+
+```{r}
+reviews <- reviews[1:2]
+reviews <- reviews[!is.na(reviews$airline), ]
 ```
 
 ```{r}
