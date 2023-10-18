@@ -158,6 +158,8 @@ reviews <- read_excel("data/capstone_airline_reviews3.xlsx")
 ```{r}
 reviews <- reviews[1:2]
 reviews <- reviews[!is.na(reviews$airline), ]
+
+saveRDS(reviews, file = "data/reviews.rds")
 ```
 
 ```{r}
