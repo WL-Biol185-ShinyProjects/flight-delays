@@ -1,0 +1,14 @@
+library(leaflet)
+library(tidyverse)
+library(shiny)
+library(geosphere)
+
+source("flight_plotter.R")
+source("delay_predictor.R")
+source("carrier_performance.R")
+
+navbarPage("Flights",
+           flight_plotter,
+           delay_predictor,
+           carrier_performance
+          )
