@@ -8,6 +8,7 @@ output: html_document
 ```{r}
 library(tidyverse)
 library(readr)
+library(readxl)
 ```
 
 ```{r}
@@ -144,11 +145,14 @@ delay.types$LATE_AIRCRAFT_DELAY <- sapply(delay.types$OP_CARRIER, function(x) {
                                                                   }
                                          )
 
-
+delay.types <- delay.types[-7,]
+saveRDS(delay.types, file = "data/delay_types.rds")
 ```
 
+# Cleaning the Review table
 
 ```{r}
+<<<<<<< HEAD
 View(airports)
 library(readr)
 uscities <- read_csv('data/uscities.csv)
@@ -181,6 +185,16 @@ airports_merged <- merged_data %>%
 saveRDS(merged_data, file = 'data/airports.rds')
 airports_merged = airports_merged %>% rename('LOCATION' = 'Location')
 saveRDS(airports_merged, file = 'data/airports-merged.rds')
+=======
+reviews <- read_excel("data/capstone_airline_reviews3.xlsx")
+```
+
+```{r}
+reviews <- reviews[1:2]
+reviews <- reviews[!is.na(reviews$airline), ]
+
+saveRDS(reviews, file = "data/reviews.rds")
+>>>>>>> aaf0cc624dffa3e5539e9894805b55e31f119c40
 ```
 
 ```{r}
