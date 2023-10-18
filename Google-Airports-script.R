@@ -84,9 +84,12 @@ View(merged_data)
 
 library(tidyverse)
 
-merged_data %>%
+airports_merged <- merged_data %>%
   mutate(Location = paste0(merged_data$AIRPORT, 
                            '(', merged_data$IATA, ')'))
 
 saveRDS(merged_data, file = 'data/airports.rds')
 
+airports_merged = airports_merged %>% rename('LOCATION' = 'Location')
+
+saveRDS(airports_merged, file = 'data/airports-merged.rds')
