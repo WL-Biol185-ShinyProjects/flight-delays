@@ -26,12 +26,12 @@ airports %>%
 ```{r}
 library(leaflet)
 library(geosphere)
-gcIntermediate(c(x,y), c(a,b),      ## (x,y) - coordinates of origin, (a,b) - coordinates of destination
+gcIntermediate(c(-106.6, 35.04),  c(-73.77, 40.64),      ## longitude, latitude
               n=100,                
               addStartEnd = TRUE,
               sp=TRUE) %>%
     leaflet() %>%
     addTiles() %>%
-    addPolylines(CITY, AIRPORT, STATE)
+    addPolylines()
 ```
 
