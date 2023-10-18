@@ -18,7 +18,7 @@ airports <- read.csv("~/flight-delays/airports.csv")
 library(tidyverse)
 
 airports %>%
-  mutate(Location = paste0(airports$AIRPORT, " (", airports$IATA, " )"))
+  mutate(Location = paste0(airports$AIRPORT, " (", airports$IATA, ")"))
 ```
 
 ## Setting up map with 1 flight path
