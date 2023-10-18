@@ -2,6 +2,7 @@ library(leaflet)
 library(tidyverse)
 library(shiny)
 library(geosphere)
+library(ggplot2)
 
 source("flight_plotter.R")
 source("delay_predictor.R")
