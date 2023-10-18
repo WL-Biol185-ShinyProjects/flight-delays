@@ -4,7 +4,7 @@
 # Session Data files
 # large data files 
 *.csv
-*.rds
+flights.rds
 
 .RData
 .RDataTmp

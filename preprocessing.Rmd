@@ -10,12 +10,6 @@ library(tidyverse)
 library(readr)
 ```
 
-Make sure the directory with all data .csv files are in subdirectory "data" of our 
-
-```{r eval=FALSE}
-system("mv data/20.csv data/2020.csv")
-```
-
 ```{r}
 parse_table <- function(fileName) { 
                 read_csv( file.path("data", fileName, fsep = "/")
@@ -55,26 +49,106 @@ parse_table <- function(fileName) {
                                            )
                         )
 }
+
+count_carrier <- function(airline) {
+  d <- flights[flights$OP_CARRIER == carrier, ] %>% select(2, 9)
+  d <- d[d$CARRIER_DELAY > 0, ]
+  d[!is.na(d$CARRIER_DELAY), ] %>% nrow()
+} 
+
+count_weather <- function(airline) {
+  d <- flights[flights$OP_CARRIER == carrier, ] %>% select(2, 10)
+  d <- d[d$WEATHER_DELAY > 0, ]
+  d[!is.na(d$WEATHER_DELAY), ] %>% nrow()
+} 
+
+count_nas <- function(airline) {
+  d <- flights[flights$OP_CARRIER == carrier, ] %>% select(2, 11)
+  d <- d[d$NAS_DELAY > 0, ]
+  d[!is.na(d$NAS_DELAY), ] %>% nrow()
+} 
+
+count_security <- function(airline) {
+  d <- flights[flights$OP_CARRIER == carrier, ] %>% select(2, 12)
+  d <- d[d$SECURITY_DELAY > 0, ]
+  d[!is.na(d$SECURITY_DELAY), ] %>% nrow()
+} 
+
+count_late <- function(airline) {
+  d <- flights[flights$OP_CARRIER == carrier, ] %>% select(2, 13)
+  d <- d[d$LATE_AIRCRAFT_DELAY > 0, ]
+  d[!is.na(d$LATE_AIRCRAFT_DELAY), ] %>% nrow()
+} 
 ```
 
 ```{r}
 # using non-vectorized to reduce memory consumption
-# 2015-2018 and 2020; 2019 is garbage
-
-# to do is removing 2020 we dont need it
-# split up the tables
+# 2015-2018
 
 flights <- data.frame()
 
-for (n in c(2015:2018, 2020)) {
+for (n in c(2015:2018)) {
   file    <- paste0(n, ".csv")
   flights <- rbind(flights, parse_table(file))
   gc()
 }
+
+saveRDS(flights, file = "data/flights.rds")
+```
+
+# Carrier performance tables
+
+```{r}
+arr.delay   <- flights %>% 
+                select(2,7)
+
+saveRDS(arr.delay, "data/arrDelay.rds")
 ```
 
 ```{r}
-saveRDS(flights, file = "data/flights.rds")
+delay.types <- data.frame( OP_CARRIER = unique(flights$OP_CARRIER) )
+
+
+delay.types$CARRIER_DELAY <- sapply(delay.types$OP_CARRIER, function(x) {
+                                                              d <- flights[flights$OP_CARRIER == x, ] %>% select(2, 9)
+                                                              d <- d[d$CARRIER_DELAY > 0, ]
+                                                              d[!is.na(d$CARRIER_DELAY), ] %>% nrow()  
+                                                            }
+                                   )
+
+delay.types$WEATHER_DELAY <- sapply(delay.types$OP_CARRIER, function(x) {
+                                                              d <- flights[flights$OP_CARRIER == x, ] %>% select(2, 10)
+                                                              d <- d[d$WEATHER_DELAY > 0, ]
+                                                              d[!is.na(d$WEATHER_DELAY), ] %>% nrow()  
+                                                            }
+                                   )
+
+delay.types$NAS_DELAY <- sapply(delay.types$OP_CARRIER, function(x) {
+                                                          d <- flights[flights$OP_CARRIER == x, ] %>% select(2, 11)
+                                                          d <- d[d$NAS_DELAY > 0, ]
+                                                          d[!is.na(d$NAS_DELAY), ] %>% nrow()  
+                                                        }
+                               )
+
+delay.types$SECURITY_DELAY <- sapply(delay.types$OP_CARRIER, function(x) {
+                                                              d <- flights[flights$OP_CARRIER == x, ] %>% select(2, 12)
+                                                              d <- d[d$SECURITY_DELAY > 0, ]
+                                                              d[!is.na(d$SECURITY_DELAY), ] %>% nrow()  
+                                                             }
+                                    )
+
+delay.types$LATE_AIRCRAFT_DELAY <- sapply(delay.types$OP_CARRIER, function(x) {
+                                                                   d <- flights[flights$OP_CARRIER == x, ] %>% select(2, 13)
+                                                                   d <- d[d$LATE_AIRCRAFT_DELAY > 0, ]
+                                                                   d[!is.na(d$LATE_AIRCRAFT_DELAY), ] %>% nrow()   
+                                                                  }
+                                         )
+
+
+```
+
+
+```{r}
 ```
 
 ```{r}
