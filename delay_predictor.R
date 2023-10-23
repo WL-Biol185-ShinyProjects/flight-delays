@@ -3,6 +3,7 @@ library(tidyverse)
 library(shiny)
 library(geosphere)
 library(ggplot2)
+library(shinyTime)
 
 # variable name conventions:
 #   start each variable name with the first word of file
@@ -10,20 +11,86 @@ library(ggplot2)
 #   with delay_*
 # 
 
-delay_predictor <- tabPanel("Delay Predictor",
-                            sidebarLayout(
-                              sidebarPanel(
-                                radioButtons("plotType", "Plot type",
-                                             c("Scatter"="p", "Line"="l")
-                                )
-                              ),
-                              mainPanel(
-                                plotOutput("plot")
-                              )
-                            )
+delay_airports <- readRDS("data/airports.rds")
+delay_carriers <- readRDS("data/carriers.rds")
+
+delay_get_coordinates <- function(code) { d <- delay_airports %>%
+                                                filter(iata == code)
+                                          c(d$airport.longitude, d$airport.latitude)
+                                        }
+
+delay_predictor <- tabPanel( "Delay Predictor"
+                           , fluidRow(
+                               column( 3
+                                     , selectizeInput( inputId  = "delay_origin"
+                                                     , label    = "Origin Airport"
+                                                     , choices  = unique(delay_airports$iata)
+                                                     , selected = "PIT"
+                                                     , options  = list( create = FALSE
+                                                                      , placeholder = "Search..."
+                                                                      , maxItems = "1"
+                                                                      , onDropdownOpen = I("function($dropdown) {if (!this.lastQuery.length) {this.close(); this.settings.openOnFocus = false;}}")
+                                                                      , onType = I("function (str) {if (str === \"\") {this.close();}}")
+                                                                      )
+                                                      )
+                                     ),
+                               column( 3
+                                     , selectizeInput( inputId  = "delay_dest"
+                                                     , label    = "Destination Airport"
+                                                     , choices  = unique(delay_airports$iata)
+                                                     , selected = "LAX"
+                                                     , options  = list( create = FALSE
+                                                                      , placeholder = "Search..."
+                                                                      , maxItems = "1"
+                                                                      , onDropdownOpen = I("function($dropdown) {if (!this.lastQuery.length) {this.close(); this.settings.openOnFocus = false;}}")
+                                                                      , onType = I("function (str) {if (str === \"\") {this.close();}}")
+                                                                      )
+                                                     )
+                                     ),
+                               column( 3
+                                     , timeInput( inputId = "delay_time"
+                                                , label   = "Time of Departure"
+                                                , value   = strptime("12:00", format = "%H:%M")
+                                                )
+                                     ),
+                               column( 2
+                                     , selectizeInput( inputId  = "delay_carrier"
+                                                     , label    = "Carrier"
+                                                     , choices  = delay_carriers
+                                                     , selected = "DL"
+                                                     , options  = list( create = FALSE
+                                                                      , placeholder = "Search..."
+                                                                      , maxItems = "1"
+                                                                      , onDropdownOpen = I("function($dropdown) {if (!this.lastQuery.length) {this.close(); this.settings.openOnFocus = false;}}")
+                                                                      , onType = I("function (str) {if (str === \"\") {this.close();}}")
+                                                                      )
+                                                     )
+                               )
+                             )
+                             , fluidRow( 
+                                 column(12
+                                       , sidebarPanel(leafletOutput("delay_predictor_map"))
+                                       ),
+                                 column(6
+                                       , mainPanel(dataTableOutput("delay_expected"))
+                                       )
+                               )
                             )
 
-delay_predictor_server <- function(input) { renderPlot({
-                                              plot(cars, type=input$plotType)
-                                            })
-                                          }
+delay_predictor_map <- function(input) { renderLeaflet({
+                                          gcIntermediate( delay_get_coordinates(input$delay_origin)
+                                                        , delay_get_coordinates(input$delay_dest)
+                                                        , n=100
+                                                        , addStartEnd=TRUE
+                                                        , sp=TRUE
+                                                        ) %>% 
+                                          leaflet() %>% 
+                                          addTiles() %>% 
+                                          addPolylines()
+                                         })
+                                        }
+
+delay_expected <- function(input) { renderDataTable({
+                                      
+                                    })
+                                  }
