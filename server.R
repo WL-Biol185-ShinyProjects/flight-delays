@@ -10,6 +10,6 @@ source("carrier_performance.R")
 
 function(input, output, session) {
   
-  output$plot <- delay_predictor_server(input)
+  output$delay_predictor_map <- delay_predictor_map(input)
   
 }
