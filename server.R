@@ -15,4 +15,5 @@ function(input, output, session) {
   
   output$arr_delayPlot <- carrier_performance_server(input)
   
+  output$flight_route_map <- flight_route_map(input)
 }
