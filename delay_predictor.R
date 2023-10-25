@@ -68,11 +68,11 @@ delay_predictor <- tabPanel( "Delay Predictor"
                                )
                              )
                              , fluidRow( 
-                                 column(12
-                                       , sidebarPanel(leafletOutput("delay_predictor_map"))
+                                 column(8
+                                       , leafletOutput("delay_predictor_map")
                                        ),
-                                 column(6
-                                       , mainPanel(dataTableOutput("delay_expected"))
+                                 column(4
+                                       , dataTableOutput("delay_expected_table")
                                        )
                                )
                             )
@@ -90,7 +90,7 @@ delay_predictor_map <- function(input) { renderLeaflet({
                                          })
                                         }
 
-delay_expected <- function(input) { renderDataTable({
+delay_expected_table <- function(input) { renderDataTable({
                                       
                                     })
                                   }
