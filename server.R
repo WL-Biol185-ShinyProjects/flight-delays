@@ -12,4 +12,5 @@ function(input, output, session) {
   
   output$plot <- delay_predictor_server(input)
   
+  output$flight_route_map <- flight_route_map(input)
 }
