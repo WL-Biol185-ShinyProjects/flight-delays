@@ -20,6 +20,7 @@ delay_get_coordinates <- function(code) { d <- delay_airports %>%
                                         }
 
 delay_predictor <- tabPanel( "Delay Predictor"
+                           , h2("Delay Prediction")
                            , fluidRow(
                                column( 3
                                      , selectizeInput( inputId  = "delay_origin"
@@ -67,11 +68,14 @@ delay_predictor <- tabPanel( "Delay Predictor"
                                                      )
                                )
                              )
-                             , fluidRow( 
-                                 column(8
+                             , br()
+                             , fluidRow(
+                                 column(7
+                                       , h4("Flight Path")
                                        , leafletOutput("delay_predictor_map")
                                        ),
-                                 column(4
+                                 column(5
+                                       , h4("Delay Statistics")
                                        , dataTableOutput("delay_expected_table")
                                        )
                                )
@@ -91,6 +95,10 @@ delay_predictor_map <- function(input) { renderLeaflet({
                                         }
 
 delay_expected_table <- function(input) { renderDataTable({
-                                      
-                                    })
-                                  }
+                                            orig <- input$delay_origin
+                                            dest <- input$delay_dest
+                                            time <- input$delay_time
+                                            
+                                            
+                                          })
+                                        }
