@@ -13,4 +13,6 @@ function(input, output, session) {
   output$delay_predictor_map  <- delay_predictor_map(input)
   output$delay_expected_table <- delay_expected_table(input)
   
+  output$arr_delayPlot <- carrier_performance_server(input)
+  
 }
