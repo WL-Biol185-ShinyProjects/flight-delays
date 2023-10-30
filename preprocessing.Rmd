@@ -51,9 +51,6 @@ parse_table <- function(fileName) {
 ```
 
 ```{r}
-# using non-vectorized to reduce memory consumption
-# 2015-2018
-
 flights <- parse_table("2018.csv")
 
 saveRDS(flights, file = "data/flights.rds")
@@ -153,11 +150,6 @@ saveRDS(reviews, file = "data/reviews.rds")
 ```
 
 ```{r}
-# read_csv_chunked allows for table streaming
-```
-
-
-```{r}
 arr_delays <- flights %>% select(1,5)
 for (x in (unique(arr_delays$OP_CARRIER))) {
   arr_delays %>%
@@ -167,6 +159,12 @@ for (x in (unique(arr_delays$OP_CARRIER))) {
 ```
 
 ```{r}
-
+predictor <- flights %>% select(1:6)
+for (x in (unique(predictor$OP_CARRIER))) {
+  predictor %>%
+      filter(OP_CARRIER == x) %>%
+      select(2:6) %>%
+      saveRDS(file = paste0('data/', x, '_full.rds'))
+}
 ```
 

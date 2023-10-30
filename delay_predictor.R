@@ -39,7 +39,7 @@ delay_predictor <- tabPanel( "Delay Predictor"
                                      , selectizeInput( inputId  = "delay_dest"
                                                      , label    = "Destination Airport"
                                                      , choices  = unique(delay_airports$iata)
-                                                     , selected = "LAX"
+                                                     , selected = "ATL"
                                                      , options  = list( create = FALSE
                                                                       , placeholder = "Search..."
                                                                       , maxItems = "1"
@@ -52,6 +52,7 @@ delay_predictor <- tabPanel( "Delay Predictor"
                                      , timeInput( inputId = "delay_time"
                                                 , label   = "Time of Departure"
                                                 , value   = strptime("12:00", format = "%H:%M")
+                                                , seconds = FALSE
                                                 )
                                      ),
                                column( 2
@@ -76,7 +77,7 @@ delay_predictor <- tabPanel( "Delay Predictor"
                                        ),
                                  column(5
                                        , h4("Delay Statistics")
-                                       , dataTableOutput("delay_expected_table")
+                                       , tableOutput("delay_expected_table")
                                        )
                                )
                             )
@@ -94,11 +95,24 @@ delay_predictor_map <- function(input) { renderLeaflet({
                                          })
                                         }
 
-delay_expected_table <- function(input) { renderDataTable({
-                                            orig <- input$delay_origin
-                                            dest <- input$delay_dest
-                                            time <- input$delay_time
+delay_expected_table <- function(input) { renderTable({
+                                            delay_orig <- input$delay_origin
+                                            delay_dest <- input$delay_dest
+                                            delay_time <- as.numeric(strftime(input$delay_time, "%H%m"))
+                                            delay_carrier_table <- readRDS(paste0("data/", input$delay_carrier, "_full.rds"))
                                             
+                                            delay_df <- delay_carrier_table %>% 
+                                                          filter((ORIGIN == delay_orig & DEST == delay_dest) & (delay_time > (CRS_DEP_TIME - 1000) & delay_time < (CRS_DEP_TIME + 1000)))
                                             
+                                            delay_ontime <- 100 * (nrow(filter(delay_df, ARR_DELAY < -8))/nrow(delay_df)) # chooses flights with delays greater than 8 minutes
+                                            delay_cancelled <- 100 * ((nrow(filter(delay_df, CANCELLED == 1)))/nrow(delay_df))
+                                            delay_worst <- min(delay_df$ARR_DELAY)
+                                            
+                                            delay_return <- matrix()
+                                            delay_return <- rbind(delay_return, c("On-time Performance", format(delay_ontime, digits = 2)))
+                                            delay_return <- rbind(delay_return, c("Cancellation History", format(delay_cancelled, digits = 2)))
+                                            delay_return <- rbind(delay_return, c("Worst Recorded Delay", delay_worst))
+                                            
+                                            delay_return
                                           })
                                         }
