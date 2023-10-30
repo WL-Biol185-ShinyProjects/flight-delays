@@ -16,10 +16,12 @@ carrier_carriers <- readRDS("data/carriers.rds")
 carrier_performance <- tabPanel("Carrier Performance", 
                         selectInput('selectCarrier', 'Aircraft Carrier',
                             choices = carrier_carriers),
-                        plotOutput('arr_delayPlot'))
+                        plotOutput('arr_delayPlot'),
+                        plotOutput('delay_typesPlot'),
+                        plotOutput('reviewsPlot'))
 
-carrier_performance_server <- function(input) { 
-  
+
+carrier_performance_arr_delay <- function(input) { 
   renderPlot({
     gc()
     lapply(input$selectCarrier, function(x) { 
@@ -28,10 +30,14 @@ carrier_performance_server <- function(input) {
       do.call(rbind, .) %>%
       ggplot(aes(ARR_DELAY)) + geom_density()
   })
-
-  
 }
 
+carrier_performance_delay_types <- function(input) {
+  renderPlot({
+    delay_types %>%
+      filter()
+  })
+}
                                 
                                 
 
