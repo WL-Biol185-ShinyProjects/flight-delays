@@ -1,5 +1,5 @@
-tidied_reviews <- tidied_reviews %>%
-  rename(OP_CARRIERS = airline, REVIEWS = reviews) %>%
+tidied_reviews <- reviews %>%
+  rename(OP_CARRIERS = 'airline', REVIEWS = 'overall') %>%
   mutate(OP_CARRIERS = case_when(
     OP_CARRIERS == "Spirit Airlines" ~ "NK",
     OP_CARRIERS == "American Airlines" ~ 'AA',
