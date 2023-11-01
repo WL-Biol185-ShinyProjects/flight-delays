@@ -29,8 +29,7 @@ carrier_performance_arr_delay <- function(input) {
             readRDS(paste0("data/", x, ".rds")) 
         }) %>%
             do.call(rbind, .) %>%
-            ggplot(aes(ARR_DELAY),
-                   color = OP_CARRIER) + 
+            ggplot(aes(ARR_DELAY)) + 
                 geom_density() + 
                 ggtitle('DENSITY OF ARRIVAL DELAY') + 
                 xlab('ARRIVAL DELAY IN MINUTES') +
@@ -47,7 +46,7 @@ carrier_performance_delay_types <- function(input) {
                   'CARRIER_DELAY':'LATE_AIRCRAFT_DELAY') %>%
             ggplot(aes(DELAY_TYPE, 
                        COUNTS,
-                       color = OP_CARRIER)) + 
+                       fill = OP_CARRIER)) + 
                 geom_bar(stat = 'identity') + 
                 ggtitle('COUNTS OF DELAY TYPES') +
                 xlab('DELAY TYPES') +
@@ -62,8 +61,7 @@ carrier_performance_reviews <- function(input) {
             renderPlot({
                 reviews %>%
                 filter(OP_CARRIERS == input$selectCarrier) %>%
-                ggplot(aes(REVIEWS),
-                       color = OP_CARRIERS) +
+                ggplot(aes(REVIEWS)) +
                     geom_density() +
                     scale_x_continuous(breaks = 1:10, 
                                       labels = 1:10) +
