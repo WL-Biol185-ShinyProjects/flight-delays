@@ -47,7 +47,8 @@ carrier_performance_delay_types <- function(input) {
             ggplot(aes(DELAY_TYPE, 
                        COUNTS,
                        fill = OP_CARRIER)) + 
-                geom_bar(stat = 'identity') + 
+                geom_bar(stat = 'identity') +
+#position = 'jitter' <-- this line is being fucky with the graph for some reason. Need to investigate  
                 ggtitle('COUNTS OF DELAY TYPES') +
                 xlab('DELAY TYPES') +
                 ylab('COUNTS')
