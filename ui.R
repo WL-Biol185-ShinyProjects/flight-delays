@@ -5,11 +5,11 @@ library(geosphere)
 library(ggplot2)
 
 source("flight_plotter.R")
-source("delay_predictor.R")
-source("carrier_performance.R")
+#source("delay_predictor.R")
+#source("carrier_performance.R")
 
 navbarPage("Flights",
            flight_plotter,
-           delay_predictor,
-           carrier_performance
+           #delay_predictor,
+           #carrier_performance
           )

@@ -3,12 +3,12 @@ library(tidyverse)
 library(shiny)
 library(geosphere)
 library(ggplot2)
+library(maps)
 
 # variable name conventions:
 #   start each variable name with the first word of file
 #   so, all variable names on this file will be prefixed
 #   with flight_*
-# 
 
 
 flight_airport_names <- readRDS("~/flight-delays/data/airports.rds")
@@ -19,29 +19,94 @@ flight_get_coordinates <- function(name) {flight_coordinates <- flight_airport_n
                                           }
 
 flight_plotter <- tabPanel("Flight Plotter",
+                 
                           sidebarLayout(
                               sidebarPanel(
-                                    selectInput("flight_origin", "Origin:", 
-                                                  choices=flight_airport_names$location
-                                                ),
-                                      selectInput("flight_destination", "Destination:",
-                                                    choices=flight_airport_names$location
-                                                  )
+                                selectInput("flight_type", "Flight Type",
+                                            c("Nonstop" = "nonstop", "One Stop" = "onestop", "Two Stop" = "twostop")
                                             ),
-                                     mainPanel(plotOutput("flight_route_map"))
-                                        )                        
+                                conditionalPanel(
+                                                condition = "input.flight_type == 'nonstop'",
+                                                selectInput("flight_origin_nonstop", "Origin:", 
+                                                              choices=flight_airport_names$location),
+                                                selectInput("flight_destination_nonstop", "Destination:",
+                                                              choices=flight_airport_names$location),
+                                                ),
+                                conditionalPanel(
+                                                condition = "input.flight_type == 'onestop'",
+                                                selectInput("flight_origin_onestop", "Origin",
+                                                            choices=flight_airport_names$location),
+                                                selectInput("flight_waypoint_onestop", "Waypoint",
+                                                            choices=flight_airport_names$location),
+                                                selectInput("flight_destination_onestop", "Destination",
+                                                            choices=flight_airport_names$location),
+                                                ),
+                                conditionalPanel(
+                                                condition = "input.flight_type == 'twostop'",
+                                                selectInput("flight_origin_twostop", "Origin",
+                                                            choices=flight_airport_names$location),
+                                                selectInput("flight_waypoint_1_twostop", "Waypoint 1",
+                                                            choices=flight_airport_names$location),
+                                                selectInput("flight_waypoint_2_twostop", "Waypoint 2",
+                                                            choices=flight_airport_names$location),
+                                                selectInput("flight_destination_twostop", "Destination",
+                                                            choices=flight_airport_names$location),
+                                                ),
+                                           ),
+                                     mainPanel(leafletOutput("flight_route_map")
+                                                )
+                                        )
                           )
 
 flight_route_map <- function(input)  {
-                                       renderPlot({
+                                       renderLeaflet({
                                   
-                                            gcIntermediate(flight_get_coordinates(input$flight_origin), flight_get_coordinates(input$flight_destination),      ## longitude, latitude
-                                                                n=100,                
-                                                                addStartEnd = TRUE,
-                                                                sp=TRUE) %>%
-                                                   leaflet() %>%
-                                                   addTiles() %>%
-                                                   addPolylines()
-                                                  })
+                                                    if (input$flight_type == "nonstop") {
+                                                    
+                                                      
+                                                    gcIntermediate(flight_get_coordinates(input$flight_origin_nonstop), flight_get_coordinates(input$flight_destination_nonstop),     
+                                                               n=100,                
+                                                               addStartEnd = TRUE,
+                                                               sp=TRUE) %>%
+                                                      leaflet() %>%
+                                                      addTiles() %>%
+                                                      addPolylines()
+                                                      
+                                                    }
+                                                    
+                                                    else if (input$flight_type == "onestop") {
+                                                      gcIntermediate(flight_get_coordinates(input$flight_origin_onestop), flight_get_coordinates(input$flight_waypoint_onestop),     
+                                                              n=100,                
+                                                              addStartEnd = TRUE,
+                                                              sp=TRUE) %>%
+                                                      gcIntermediate(flight_get_coordinates(input$flight_waypoint_onestop), flight_get_coordinates(input$flight_destination_onestop),     
+                                                                       n=100,                
+                                                                       addStartEnd = TRUE,
+                                                                       sp=TRUE) %>%
+                                                  
+                                                        leaflet() %>%
+                                                        addTiles() %>%
+                                                        addPolylines()
+                                                    }
+                                         
+                                                    else if (input$flight_type == "twostop") {
+                                                    gcIntermediate(flight_get_coordinates(input$flight_origin_twostop), flight_get_coordinates(input$flight_waypoint_1_twostop),     
+                                                              n=100,                
+                                                              addStartEnd = TRUE,
+                                                              sp=TRUE) %>%
+                                                    gcIntermediate(flight_get_coordinates(input$flight_waypoint_1_twostop), flight_get_coordinates(input$flight_waypoint_2_twostop),     
+                                                              n=100,                
+                                                              addStartEnd = TRUE,
+                                                              sp=TRUE) %>%
+                                                    gcIntermediate(flight_get_coordinates(input$flight_waypoint_2_twostop), flight_get_coordinates(input$flight_destination_twostop),     
+                                                              n=100,                
+                                                              addStartEnd = TRUE,
+                                                              sp=TRUE) %>%     
+                                                    leaflet() %>%
+                                                    addTiles() %>%
+                                                    addPolylines()  
+                                                    }
+                                             })
 }
+
 
