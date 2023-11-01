@@ -72,6 +72,6 @@ carrier_performance_reviews <- function(input) {
         } else { 
           print('DATA UNAVAILABLE')   
         }
-})
+    })
 }
                                 
