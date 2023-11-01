@@ -11,7 +11,7 @@ library(maps)
 #   with flight_*
 
 
-flight_airport_names <- readRDS("~/flight-delays/data/airports.rds")
+flight_airport_names <- readRDS("data/airports.rds")
 
 flight_get_coordinates <- function(name) {flight_coordinates <- flight_airport_names %>%
                                             filter(name == location)

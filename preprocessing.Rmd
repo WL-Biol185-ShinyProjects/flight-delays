@@ -14,12 +14,10 @@ library(readxl)
 ```{r}
 parse_table <- function(fileName) { 
                 read_csv( file.path("data", fileName, fsep = "/")
-                        , col_select = c( "FL_DATE"
-                                        , "OP_CARRIER"
-                                        , "OP_CARRIER_FL_NUM"
+                        , col_select = c( "OP_CARRIER"
                                         , "ORIGIN"
                                         , "DEST"
-                                        , "DEP_DELAY"
+                                        , "CRS_DEP_TIME"
                                         , "ARR_DELAY"
                                         , "CANCELLED"
                                         , "CARRIER_DELAY"
@@ -50,49 +48,10 @@ parse_table <- function(fileName) {
                                            )
                         )
 }
-
-count_carrier <- function(airline) {
-  d <- flights[flights$OP_CARRIER == carrier, ] %>% select(2, 9)
-  d <- d[d$CARRIER_DELAY > 0, ]
-  d[!is.na(d$CARRIER_DELAY), ] %>% nrow()
-} 
-
-count_weather <- function(airline) {
-  d <- flights[flights$OP_CARRIER == carrier, ] %>% select(2, 10)
-  d <- d[d$WEATHER_DELAY > 0, ]
-  d[!is.na(d$WEATHER_DELAY), ] %>% nrow()
-} 
-
-count_nas <- function(airline) {
-  d <- flights[flights$OP_CARRIER == carrier, ] %>% select(2, 11)
-  d <- d[d$NAS_DELAY > 0, ]
-  d[!is.na(d$NAS_DELAY), ] %>% nrow()
-} 
-
-count_security <- function(airline) {
-  d <- flights[flights$OP_CARRIER == carrier, ] %>% select(2, 12)
-  d <- d[d$SECURITY_DELAY > 0, ]
-  d[!is.na(d$SECURITY_DELAY), ] %>% nrow()
-} 
-
-count_late <- function(airline) {
-  d <- flights[flights$OP_CARRIER == carrier, ] %>% select(2, 13)
-  d <- d[d$LATE_AIRCRAFT_DELAY > 0, ]
-  d[!is.na(d$LATE_AIRCRAFT_DELAY), ] %>% nrow()
-} 
 ```
 
 ```{r}
-# using non-vectorized to reduce memory consumption
-# 2015-2018
-
-flights <- data.frame()
-
-for (n in c(2015:2018)) {
-  file    <- paste0(n, ".csv")
-  flights <- rbind(flights, parse_table(file))
-  gc()
-}
+flights <- parse_table("2018.csv")
 
 saveRDS(flights, file = "data/flights.rds")
 ```
@@ -100,84 +59,78 @@ saveRDS(flights, file = "data/flights.rds")
 # Carrier performance tables
 
 ```{r}
-arr.delay   <- flights %>% 
-                select(2,7)
-
-saveRDS(arr.delay, "data/arrDelay.rds")
-```
-
-```{r}
 delay.types <- data.frame( OP_CARRIER = unique(flights$OP_CARRIER) )
 
 
 delay.types$CARRIER_DELAY <- sapply(delay.types$OP_CARRIER, function(x) {
-                                                              d <- flights[flights$OP_CARRIER == x, ] %>% select(2, 9)
+                                                              d <- flights[flights$OP_CARRIER == x, ] %>% select(1, 7)
                                                               d <- d[d$CARRIER_DELAY > 0, ]
                                                               d[!is.na(d$CARRIER_DELAY), ] %>% nrow()  
                                                             }
                                    )
 
 delay.types$WEATHER_DELAY <- sapply(delay.types$OP_CARRIER, function(x) {
-                                                              d <- flights[flights$OP_CARRIER == x, ] %>% select(2, 10)
+                                                              d <- flights[flights$OP_CARRIER == x, ] %>% select(1, 8)
                                                               d <- d[d$WEATHER_DELAY > 0, ]
                                                               d[!is.na(d$WEATHER_DELAY), ] %>% nrow()  
                                                             }
                                    )
 
 delay.types$NAS_DELAY <- sapply(delay.types$OP_CARRIER, function(x) {
-                                                          d <- flights[flights$OP_CARRIER == x, ] %>% select(2, 11)
+                                                          d <- flights[flights$OP_CARRIER == x, ] %>% select(1, 9)
                                                           d <- d[d$NAS_DELAY > 0, ]
                                                           d[!is.na(d$NAS_DELAY), ] %>% nrow()  
                                                         }
                                )
 
 delay.types$SECURITY_DELAY <- sapply(delay.types$OP_CARRIER, function(x) {
-                                                              d <- flights[flights$OP_CARRIER == x, ] %>% select(2, 12)
+                                                              d <- flights[flights$OP_CARRIER == x, ] %>% select(1, 10)
                                                               d <- d[d$SECURITY_DELAY > 0, ]
                                                               d[!is.na(d$SECURITY_DELAY), ] %>% nrow()  
                                                              }
                                     )
 
 delay.types$LATE_AIRCRAFT_DELAY <- sapply(delay.types$OP_CARRIER, function(x) {
-                                                                   d <- flights[flights$OP_CARRIER == x, ] %>% select(2, 13)
+                                                                   d <- flights[flights$OP_CARRIER == x, ] %>% select(1, 11)
                                                                    d <- d[d$LATE_AIRCRAFT_DELAY > 0, ]
                                                                    d[!is.na(d$LATE_AIRCRAFT_DELAY), ] %>% nrow()   
                                                                   }
                                          )
 
-delay.types <- delay.types[-7,]
+delay.types <- delay.types[-13,]
 saveRDS(delay.types, file = "data/delay_types.rds")
 ```
 
 # Cleaning the Review table
 
 ```{r}
-<<<<<<< HEAD
-View(airports)
 library(readr)
-uscities <- read_csv('data/uscities.csv)
+uscities <- read_csv('data/uscities.csv')
 colnames(airports)[colnames(airports) == "LATITUDE"] <- "AIRPORT LATITUDE"
 colnames(airports)[colnames(airports) == "LONGITUDE"] <- "AIRPORT LONGITUDE"
 uscities_sub <- uscities[, c("city", "lat", "lng")]
 merged_data <- merge(airports, uscities_sub, by.x="city", by.y = "city", all.x=TRUE)
 uscities_sub <- uscities[, c("city", "lat", "lng")]
 merged_data <- merge(airports, uscities_sub, by.x="CITY", by.y = "city", all.x=TRUE)
-View(merged_data)
+
 duplicateRows <- duplicated(airports$CITY)
 merged_data <- merge(airports, uscities_sub, by.x="CITY", by.y = "city")
-View(merged_data)
+
 uscities_sub <- uscities[, c("city", "state_id", "lat", "lng")]
-View(uscities_sub)
+
 uscities_sub <- uscities[, c("city", "state_id", "lat", "lng")]
 merged_data <- merge(airports, uscities_sub, by.x=c("CITY", "STATE"), by.y=c("city", "state_id"))
 duplicateRows <- duplicated(airports$CITY)
 merged_data <- merge(airports, uscities_sub, by.x="CITY", by.y = "city")
-View(merged_data)
+
 uscities_sub <- uscities[, c("city", "state_id", "lat", "lng")]
-View(uscities_sub)
+
 uscities_sub <- uscities[, c("city", "state_id", "lat", "lng")]
 merged_data <- merge(airports, uscities_sub, by.x=c("CITY", "STATE"), by.y=c("city", "state_id"))
-View(merged_data)
+```
+
+
+```{r}
 library(tidyverse)
 airports_merged <- merged_data %>%
   mutate(Location = paste0(merged_data$AIRPORT, 
@@ -185,7 +138,7 @@ airports_merged <- merged_data %>%
 saveRDS(merged_data, file = 'data/airports.rds')
 airports_merged = airports_merged %>% rename('LOCATION' = 'Location')
 saveRDS(airports_merged, file = 'data/airports-merged.rds')
-=======
+
 reviews <- read_excel("data/capstone_airline_reviews3.xlsx")
 ```
 
@@ -194,20 +147,24 @@ reviews <- reviews[1:2]
 reviews <- reviews[!is.na(reviews$airline), ]
 
 saveRDS(reviews, file = "data/reviews.rds")
->>>>>>> aaf0cc624dffa3e5539e9894805b55e31f119c40
 ```
 
 ```{r}
-# read_csv_chunked allows for table streaming
-```
-
-
-```{r}
-arr_delays <- readRDS('data/arr_delays.rds')
-lapply(unique(arr_delays$OP_CARRIER), 
-  function(x) { 
-    arr_delays %>%
+arr_delays <- flights %>% select(1,5)
+for (x in (unique(arr_delays$OP_CARRIER))) {
+  arr_delays %>%
       filter(OP_CARRIER == x) %>%
       saveRDS(file = paste0('data/', x, '.rds'))
-    })
-``
+}
+```
+
+```{r}
+predictor <- flights %>% select(1:6)
+for (x in (unique(predictor$OP_CARRIER))) {
+  predictor %>%
+      filter(OP_CARRIER == x) %>%
+      select(2:6) %>%
+      saveRDS(file = paste0('data/', x, '_full.rds'))
+}
+```
+
