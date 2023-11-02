@@ -29,8 +29,8 @@ carrier_performance_arr_delay <- function(input) {
             readRDS(paste0("data/", x, ".rds")) 
         }) %>%
             do.call(rbind, .) %>%
-            ggplot(aes(ARR_DELAY),
-                   fill = OP_CARRIER) + 
+            ggplot(aes(ARR_DELAY,
+                   fill = OP_CARRIER)) + 
                 geom_density() + 
                 ggtitle('DENSITY OF ARRIVAL DELAY') + 
                 xlab('ARRIVAL DELAY IN MINUTES') +
