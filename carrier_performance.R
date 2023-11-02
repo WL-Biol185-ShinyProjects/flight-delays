@@ -29,7 +29,8 @@ carrier_performance_arr_delay <- function(input) {
             readRDS(paste0("data/", x, ".rds")) 
         }) %>%
             do.call(rbind, .) %>%
-            ggplot(aes(ARR_DELAY)) + 
+            ggplot(aes(ARR_DELAY),
+                   fill = OP_CARRIER) + 
                 geom_density() + 
                 ggtitle('DENSITY OF ARRIVAL DELAY') + 
                 xlab('ARRIVAL DELAY IN MINUTES') +
@@ -46,9 +47,10 @@ carrier_performance_delay_types <- function(input) {
                   'CARRIER_DELAY':'LATE_AIRCRAFT_DELAY') %>%
             ggplot(aes(DELAY_TYPE, 
                        COUNTS,
-                       fill = OP_CARRIER)) + 
-                geom_bar(stat = 'identity') +
-#position = 'jitter' <-- this line is being fucky with the graph for some reason. Need to investigate  
+                       fill = OP_CARRIER,
+                       position = 'dodge')) + 
+                geom_bar(stat = 'identity',
+                         position = 'dodge') +
                 ggtitle('COUNTS OF DELAY TYPES') +
                 xlab('DELAY TYPES') +
                 ylab('COUNTS')
@@ -61,14 +63,15 @@ carrier_performance_reviews <- function(input) {
         if (a %in% input$selectCarrier) {
             renderPlot({
                 reviews %>%
-                filter(OP_CARRIERS == input$selectCarrier) %>%
-                ggplot(aes(REVIEWS)) +
-                    geom_density() +
-                    scale_x_continuous(breaks = 1:10, 
-                                      labels = 1:10) +
-                    ggtitle('DENSITY OF REVIEWS (1-10)') +
-                    xlab('REVIEWS (1-10)') +
-                    ylab('DENSITY')
+                    filter(OP_CARRIERS == input$selectCarrier) %>%
+                    ggplot(aes(REVIEWS,
+                          fill = OP_CARRIERS)) +
+                        geom_density() +
+                        scale_x_continuous(breaks = 1:10, 
+                                          labels = 1:10) +
+                        ggtitle('DENSITY OF REVIEWS (1-10)') +
+                        xlab('REVIEWS (1-10)') +
+                        ylab('DENSITY')
             })
         } else { 
           print('DATA UNAVAILABLE')   
