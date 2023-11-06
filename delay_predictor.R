@@ -20,67 +20,55 @@ delay_get_coordinates <- function(code) { d <- delay_airports %>%
                                         }
 
 delay_predictor <- tabPanel( "Delay Predictor"
-                           , h2("Delay Prediction")
-                           , fluidRow(
-                               column( 2
+                            , tags$style(type = "text/css", "html, body { width: 100%; height: 150% } #controls { background-color: rgba(255,255,255,.75); padding: 30px; cursor: move; transition: opacity 500ms 1s; } .wrapper { position: fixed; top: 100px; left: 0; right: 0; bottom: 0; top: 0; overflow: hidden; padding: 0; } .leaflet-control-container { display: none; } em { font-size: 11px }")
+                            , div( class = "wrapper"
+                                 , leafletOutput("delay_predictor_map", width = "100%", height = "100%" )
+                                 , absolutePanel( id = "controls", fixed = TRUE, top = 60, right = 20, left = "auto", bottom = "auto", width = 330, height = "auto"
+                                     , h4("Flight Options")
                                      , selectizeInput( inputId  = "delay_origin"
-                                                     , label    = "Origin Airport"
-                                                     , choices  = unique(delay_airports$iata)
-                                                     , selected = "PIT"
-                                                     , options  = list( create = FALSE
-                                                                      , placeholder = "Search..."
-                                                                      , maxItems = "1"
-                                                                      , onDropdownOpen = I("function($dropdown) {if (!this.lastQuery.length) {this.close(); this.settings.openOnFocus = false;}}")
-                                                                      , onType = I("function (str) {if (str === \"\") {this.close();}}")
-                                                                      )
-                                                      )
-                                     ),
-                               column( 2
-                                     , selectizeInput( inputId  = "delay_dest"
-                                                     , label    = "Destination Airport"
-                                                     , choices  = unique(delay_airports$iata)
-                                                     , selected = "SFO"
-                                                     , options  = list( create = FALSE
-                                                                      , placeholder = "Search..."
-                                                                      , maxItems = "1"
-                                                                      , onDropdownOpen = I("function($dropdown) {if (!this.lastQuery.length) {this.close(); this.settings.openOnFocus = false;}}")
-                                                                      , onType = I("function (str) {if (str === \"\") {this.close();}}")
-                                                                      )
-                                                     )
-                                     ),
-                               column( 2
-                                       , selectizeInput( inputId  = "delay_carrier"
-                                                         , label    = "Carrier"
-                                                         , choices  = delay_carriers
-                                                         , selected = "UA"
-                                                         , options  = list( create = FALSE
+                                                           , label    = "Origin Airport"
+                                                           , choices  = unique(delay_airports$iata)
+                                                           , selected = "PIT"
+                                                           , options  = list( create = FALSE
                                                                             , placeholder = "Search..."
                                                                             , maxItems = "1"
                                                                             , onDropdownOpen = I("function($dropdown) {if (!this.lastQuery.length) {this.close(); this.settings.openOnFocus = false;}}")
                                                                             , onType = I("function (str) {if (str === \"\") {this.close();}}")
-                                                         )
-                                       )
-                               ),
-                               column( 2
+                                                                            )
+                                                      )
+                                     , selectizeInput( inputId  = "delay_dest"
+                                                           , label    = "Destination Airport"
+                                                           , choices  = unique(delay_airports$iata)
+                                                           , selected = "SFO"
+                                                           , options  = list( create = FALSE
+                                                                            , placeholder = "Search..."
+                                                                            , maxItems = "1"
+                                                                            , onDropdownOpen = I("function($dropdown) {if (!this.lastQuery.length) {this.close(); this.settings.openOnFocus = false;}}")
+                                                                            , onType = I("function (str) {if (str === \"\") {this.close();}}")
+                                                                            )
+                                                      )
+                                     , selectizeInput( inputId  = "delay_carrier"
+                                                               , label    = "Carrier"
+                                                               , choices  = delay_carriers
+                                                               , selected = "UA"
+                                                               , options  = list( create = FALSE
+                                                                                  , placeholder = "Search..."
+                                                                                  , maxItems = "1"
+                                                                                  , onDropdownOpen = I("function($dropdown) {if (!this.lastQuery.length) {this.close(); this.settings.openOnFocus = false;}}")
+                                                                                  , onType = I("function (str) {if (str === \"\") {this.close();}}")
+                                                               )
+                                                      )
                                      , timeInput( inputId = "delay_time"
-                                                , label   = "Time of Departure"
-                                                , value   = strptime("12:00", format = "%H:%M")
-                                                , seconds = FALSE
+                                                      , label   = "Time of Departure"
+                                                      , value   = strptime("08:15", format = "%H:%M")
+                                                      , seconds = FALSE
                                                 )
-                                     )
-                             )
-                             , br()
-                             , fluidRow(
-                                 column(7
-                                       , h4("Flight Path")
-                                       , leafletOutput("delay_predictor_map")
-                                       ),
-                                 column(5
-                                       , h4("Delay Statistics")
-                                       , uiOutput("delay_expected_table")
-                                       )
-                               )
-                            )
+                                     , br()
+                                     , h4("Delay Statistics")
+                                     , uiOutput("delay_expected_table")
+                                   )
+                                 )
+                          )
 
 delay_predictor_map <- function(input) {  renderLeaflet({
                                             if (isTruthy(input$delay_origin) & isTruthy(input$delay_dest)) { 
@@ -106,28 +94,25 @@ delay_expected_table <- function(input) { renderUI({
                                             delay_orig <- input$delay_origin
                                             delay_dest <- input$delay_dest
                                             delay_time <- as.numeric(strftime(input$delay_time, "%H%m"))
-                                            ## NEED TO HANDLE EMPTY HERE
-                                            ## NEED TO HANDLE SOME TIMES GIVING NO FLIGHTS
                                             delay_carrier_table <- readRDS(paste0("data/", input$delay_carrier, "_full.rds"))
                                             
                                             delay_df <- delay_carrier_table %>% 
-                                                          filter((ORIGIN == delay_orig & DEST == delay_dest) & (delay_time > (CRS_DEP_TIME - 1000) & delay_time < (CRS_DEP_TIME + 1000)))
+                                                          filter((ORIGIN == delay_orig & DEST == delay_dest) & (delay_time > (CRS_DEP_TIME - 100) & delay_time < (CRS_DEP_TIME + 100)))
                                             
-                                            delay_ontime <- 100 * (nrow(filter(delay_df, ARR_DELAY > -20))/nrow(delay_df)) # chooses flights with delays greater than 20 minutes
+                                            delay_ontime <- 100 * (nrow(filter(delay_df, ARR_DELAY > -12))/nrow(delay_df)) # chooses flights with delays greater than 12 minutes
                                             delay_cancelled <- 100 * ((nrow(filter(delay_df, CANCELLED == 1)))/nrow(delay_df))
                                             delay_worst <- abs(min(delay_df$ARR_DELAY, na.rm = TRUE))
                                             
                                             if (!is.nan(delay_ontime)) {
                                               tagList(
                                                 p(strong("On-time Performance:"), format(delay_ontime, digits = 2), "%"),
-                                                hr(),
                                                 p(strong("Cancellation History:"), format(delay_cancelled, digits = 2), "%"),
-                                                hr(),
-                                                p(strong("Worst Delay of 2018:"), delay_worst, "minutes")
+                                                p(strong("Worst Delay of 2018:"), delay_worst, "minutes"),
+                                                em("*On-time performance is calculated from arrival delays greater than 12 minutes")
                                               )
                                             } else {
                                               tagList(
-                                                p(strong("Route does not exist for the carrier selected"))
+                                                p(strong("Route does not exist for the carrier or time selected."))
                                               )
                                             }
                                           })
