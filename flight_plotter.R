@@ -197,33 +197,33 @@ flight_route_map <- function(input)  {
                                              })
 }
 
-flight_seat <- function(input) {  if (input$flight_type == "onestop") {
-                                    flight_city_orig <- flight_get_city(input$flight_origin_onestop)
-                                    flight_city_dest <- flight_get_city(input$flight_waypoint_onestop)
-                                    
-                                    flight_port_orig <- flight_get_coordinates(input$flight_origin_onestop)
-                                    flight_port_dest <- flight_get_coordinates(input$flight_waypoint_onestop)
-                                    
-                                    
-                                    # if flying west
-                                    if (flight_city_orig[2] < flight_city_dest[1]) {
-                                      
-                                    } 
-                                    
-                                    #if flying east
-                                    else if (flight_city_orig[1] < flight_city_dest[2]) {
-                                      
-                                    }
-                                  }
-  
-                                  else if (input$flight_type == "twostop") {
-                                    flight_city_orig <- flight_get_city(input$flight_origin_twostop)
-                                    flight_city_mid  <- flight_get_city(input$flight_waypoint_1_twostop)
-                                    flight_city_dest <- flight_get_city(input$flight_waypoint_2_twostop)
-                                    
-                                    flight_port_orig <- flight_get_coordinates(input$flight_origin_twostop)
-                                    flight_port_mid  <- flight_get_coordinates(input$flight_waypoint_1_twostop)
-                                    flight_port_dest <- flight_get_coordinates(input$flight_waypoint_2_twostop)
-                                  }
-                                  
-                               }
+#flight_seat <- function(input) {  if (input$flight_type == "onestop") {
+#                                    flight_city_orig <- flight_get_city(input$flight_origin_onestop)
+#                                    flight_city_dest <- flight_get_city(input$flight_waypoint_onestop)
+#                                    
+#                                    flight_port_orig <- flight_get_coordinates(input$flight_origin_onestop)
+#                                    flight_port_dest <- flight_get_coordinates(input$flight_waypoint_onestop)
+#                                    
+#                                    
+#                                    # if flying west
+#                                    if (flight_city_orig[2] < flight_city_dest[1]) {
+#                                      
+#                                    } 
+#                                    
+#                                    #if flying east
+#                                    else if (flight_city_orig[1] < flight_city_dest[2]) {
+#                                      
+#                                    }
+#                                  }
+#  
+#                                  else if (input$flight_type == "twostop") {
+#                                    flight_city_orig <- flight_get_city(input$flight_origin_twostop)
+#                                    flight_city_mid  <- flight_get_city(input$flight_waypoint_1_twostop)
+#                                    flight_city_dest <- flight_get_city(input$flight_waypoint_2_twostop)
+#                                    
+#                                    flight_port_orig <- flight_get_coordinates(input$flight_origin_twostop)
+#                                    flight_port_mid  <- flight_get_coordinates(input$flight_waypoint_1_twostop)
+#                                    flight_port_dest <- flight_get_coordinates(input$flight_waypoint_2_twostop)
+#                                  }
+#                                  
+#                               }
