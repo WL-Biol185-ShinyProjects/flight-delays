@@ -25,45 +25,132 @@ flight_get_coordinates <- function(name) { flight_coordinates <- flight_airport_
                                             c(flight_coordinates$airport.longitude, flight_coordinates$airport.latitude)
                                           }
 
-flight_plotter <- tabPanel("Flight Plotter",
-                          sidebarLayout(
-                              sidebarPanel(
-                                selectInput("flight_type", "Flight Type",
-                                            c("Nonstop" = "nonstop", "One Stop" = "onestop", "Two Stop" = "twostop")
-                                            ),
-                                conditionalPanel(
-                                                condition = "input.flight_type == 'nonstop'",
-                                                selectInput("flight_origin_nonstop", "Origin:", 
-                                                              choices=flight_airport_names$location),
-                                                selectInput("flight_destination_nonstop", "Destination:",
-                                                              choices=flight_airport_names$location),
-                                                ),
-                                conditionalPanel(
-                                                condition = "input.flight_type == 'onestop'",
-                                                selectInput("flight_origin_onestop", "Origin",
-                                                            choices=flight_airport_names$location),
-                                                selectInput("flight_waypoint_onestop", "Waypoint",
-                                                            choices=flight_airport_names$location),
-                                                selectInput("flight_destination_onestop", "Destination",
-                                                            choices=flight_airport_names$location),
-                                                ),
-                                conditionalPanel(
-                                                condition = "input.flight_type == 'twostop'",
-                                                selectInput("flight_origin_twostop", "Origin",
-                                                            choices=flight_airport_names$location),
-                                                selectInput("flight_waypoint_1_twostop", "Waypoint 1",
-                                                            choices=flight_airport_names$location),
-                                                selectInput("flight_waypoint_2_twostop", "Waypoint 2",
-                                                            choices=flight_airport_names$location),
-                                                selectInput("flight_destination_twostop", "Destination",
-                                                            choices=flight_airport_names$location),
-                                                ),
-                                checkboxInput("flight_weather", "Show Weather Radar", value = FALSE)
+flight_plotter <- tabPanel( "Flight Plotter",
+                            tags$style(type = "text/css", "html, body { width: 100%; height: 150% } #controls { background-color: rgba(255,255,255,.75); padding: 30px; cursor: move; transition: opacity 500ms 1s; } .wrapper { position: fixed; top: 100px; left: 0; right: 0; bottom: 0; top: 0; overflow: hidden; padding: 0; } .leaflet-control-container { display: none; } em { font-size: 11px }"),
+                              div( class = "wrapper",
+                                  leafletOutput("flight_route_map", width = "100%", height = "100%" ),
+                                  absolutePanel(id = "controls", fixed = TRUE, top = 60, right = "auto", left = 20, bottom = "auto", width = 330, height = "auto",
+                                                h4("Flight Information"),
+            
+                                      selectInput("flight_type", "Flight Type",
+                                                  c("Nonstop" = "nonstop", "One Stop" = "onestop", "Two Stop" = "twostop")
+                                                  ),
+                                          conditionalPanel(
+                                                          condition = "input.flight_type == 'nonstop'",
+                                                          
+                                                          selectizeInput( inputId  = "flight_origin_nonstop"
+                                                                          , label    = "Origin Airport"
+                                                                          , choices  = flight_airport_names$location
+                                                                          , selected = "John F Kennedy Intl (JFK)"
+                                                                          , options  = list( create = FALSE
+                                                                                             , placeholder = "Search..."
+                                                                                             , maxItems = "1"
+                                                                                             , onDropdownOpen = I("function($dropdown) {if (!this.lastQuery.length) {this.close(); this.settings.openOnFocus = false;}}")
+                                                                                             , onType = I("function (str) {if (str === \"\") {this.close();}}")
+                                                                          )
+                                                          ),
+                                                          selectizeInput( inputId  = "flight_destination_nonstop"
+                                                                          , label    = "Destination Airport"
+                                                                          , choices  = flight_airport_names$location
+                                                                          , selected = "Los Angeles International (LAX)"
+                                                                          , options  = list( create = FALSE
+                                                                                             , placeholder = "Search..."
+                                                                                             , maxItems = "1"
+                                                                                             , onDropdownOpen = I("function($dropdown) {if (!this.lastQuery.length) {this.close(); this.settings.openOnFocus = false;}}")
+                                                                                             , onType = I("function (str) {if (str === \"\") {this.close();}}")
+                                                                          )
+                                                          )
+                                                          ),
+                                          conditionalPanel(
+                                                          condition = "input.flight_type == 'onestop'",
+                                                          
+                                                          selectizeInput( inputId  = "flight_origin_onestop"
+                                                                          , label    = "Origin Airport"
+                                                                          , choices  = flight_airport_names$location
+                                                                          , selected = "John F Kennedy Intl (JFK)"
+                                                                          , options  = list( create = FALSE
+                                                                                             , placeholder = "Search..."
+                                                                                             , maxItems = "1"
+                                                                                             , onDropdownOpen = I("function($dropdown) {if (!this.lastQuery.length) {this.close(); this.settings.openOnFocus = false;}}")
+                                                                                             , onType = I("function (str) {if (str === \"\") {this.close();}}")
+                                                                          )
+                                                          ),
+                                                          selectizeInput( inputId  = "flight_waypoint_onestop"
+                                                                          , label    = "Layover Airport"
+                                                                          , choices  = flight_airport_names$location
+                                                                          , selected = "Des Moines International (DEM)"
+                                                                          , options  = list( create = FALSE
+                                                                                             , placeholder = "Search..."
+                                                                                             , maxItems = "1"
+                                                                                             , onDropdownOpen = I("function($dropdown) {if (!this.lastQuery.length) {this.close(); this.settings.openOnFocus = false;}}")
+                                                                                             , onType = I("function (str) {if (str === \"\") {this.close();}}")
+                                                                          )
+                                                          ),
+                                                          selectizeInput( inputId  = "flight_destination_onestop"
+                                                                          , label    = "Destination Airport"
+                                                                          , choices  = flight_airport_names$location
+                                                                          , selected = "Los Angeles International (LAX)"
+                                                                          , options  = list( create = FALSE
+                                                                                             , placeholder = "Search..."
+                                                                                             , maxItems = "1"
+                                                                                             , onDropdownOpen = I("function($dropdown) {if (!this.lastQuery.length) {this.close(); this.settings.openOnFocus = false;}}")
+                                                                                             , onType = I("function (str) {if (str === \"\") {this.close();}}")
+                                                                          )
+                                                          )
+                                                          ),
+                                          conditionalPanel(
+                                                          condition = "input.flight_type == 'twostop'",
+                                                          
+                                                          selectizeInput( inputId  = "flight_origin_twostop"
+                                                                          , label    = "Origin Airport"
+                                                                          , choices  = flight_airport_names$location
+                                                                          , selected = "John F Kennedy Intl (JFK)"
+                                                                          , options  = list( create = FALSE
+                                                                                             , placeholder = "Search..."
+                                                                                             , maxItems = "1"
+                                                                                             , onDropdownOpen = I("function($dropdown) {if (!this.lastQuery.length) {this.close(); this.settings.openOnFocus = false;}}")
+                                                                                             , onType = I("function (str) {if (str === \"\") {this.close();}}")
+                                                                          )
+                                                          ),
+                                                          selectizeInput( inputId  = "flight_waypoint_1_twostop"
+                                                                          , label    = "First Layover Airport"
+                                                                          , choices  = flight_airport_names$location
+                                                                          , selected = "Memphis International (MEM)"
+                                                                          , options  = list( create = FALSE
+                                                                                             , placeholder = "Search..."
+                                                                                             , maxItems = "1"
+                                                                                             , onDropdownOpen = I("function($dropdown) {if (!this.lastQuery.length) {this.close(); this.settings.openOnFocus = false;}}")
+                                                                                             , onType = I("function (str) {if (str === \"\") {this.close();}}")
+                                                                          )
+                                                          ),
+                                                          selectizeInput( inputId  = "flight_waypoint_2_twostop"
+                                                                          , label    = "Second Layover Airport"
+                                                                          , choices  = flight_airport_names$location
+                                                                          , selected = "Des Moines International (DEM)"
+                                                                          , options  = list( create = FALSE
+                                                                                             , placeholder = "Search..."
+                                                                                             , maxItems = "1"
+                                                                                             , onDropdownOpen = I("function($dropdown) {if (!this.lastQuery.length) {this.close(); this.settings.openOnFocus = false;}}")
+                                                                                             , onType = I("function (str) {if (str === \"\") {this.close();}}")
+                                                                          )
+                                                          ),
+                                                          selectizeInput( inputId  = "flight_destination_twostop"
+                                                                          , label    = "Destination Airport"
+                                                                          , choices  = flight_airport_names$location
+                                                                          , selected = "Los Angeles International (LAX)"
+                                                                          , options  = list( create = FALSE
+                                                                                             , placeholder = "Search..."
+                                                                                             , maxItems = "1"
+                                                                                             , onDropdownOpen = I("function($dropdown) {if (!this.lastQuery.length) {this.close(); this.settings.openOnFocus = false;}}")
+                                                                                             , onType = I("function (str) {if (str === \"\") {this.close();}}")
+                                                                          )
+                                                          )
+                                                          ),
+                                      checkboxInput("flight_weather", "Show Weather Radar", value = FALSE)
                                            ),
-                                     mainPanel(leafletOutput("flight_route_map")
-                                                )
                                         )
-                          )
+                             )
+                          
 
 flight_route_map <- function(input)  {
                                        renderLeaflet({
