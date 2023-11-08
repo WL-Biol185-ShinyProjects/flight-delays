@@ -3,7 +3,6 @@ library(tidyverse)
 library(shiny)
 library(geosphere)
 library(ggplot2)
-library(shinyWidgets)
 
 # variable name conventions:
 #   start each variable name with the first word of file

@@ -7,6 +7,7 @@ library(ggplot2)
 source("flight_plotter.R")
 source("delay_predictor.R")
 source("carrier_performance.R")
+source("carrier_safety.R")
 
 function(input, output, session) {
 
