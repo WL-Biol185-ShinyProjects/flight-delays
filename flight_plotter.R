@@ -13,6 +13,11 @@ library(maps)
 
 flight_airport_names <- readRDS("data/airports.rds")
 
+flight_get_city <- function(name) { d <- delay_airports %>%
+                                          filter(name == location)
+                                    c(d$city.longitude, d$city.latitude)
+                                  }
+
 flight_get_coordinates <- function(name) {flight_coordinates <- flight_airport_names %>%
                                             filter(name == location)
                                             c(flight_coordinates$airport.longitude, flight_coordinates$airport.latitude)
@@ -109,4 +114,7 @@ flight_route_map <- function(input)  {
                                              })
 }
 
-
+#flight_seat <- function(input) { 
+#                                  
+#                                  
+#                               }

@@ -71,21 +71,39 @@ delay_predictor <- tabPanel( "Delay Predictor"
                           )
 
 delay_predictor_map <- function(input) {  renderLeaflet({
-                                            if (isTruthy(input$delay_origin) & isTruthy(input$delay_dest)) { 
-                                              gcIntermediate( delay_get_coordinates(input$delay_origin)
-                                                              , delay_get_coordinates(input$delay_dest)
-                                                              , n=100
-                                                              , addStartEnd=TRUE
-                                                              , sp=TRUE
-                                              ) %>% 
-                                              leaflet() %>% 
-                                              addTiles() %>% 
-                                              addPolylines()
-                                              
+                                            if (as.numeric(strftime(input$delay_time, "%H%m")) > 1800) {
+                                              if (isTruthy(input$delay_origin) & isTruthy(input$delay_dest)) { 
+                                                  gcIntermediate( delay_get_coordinates(input$delay_origin)
+                                                                  , delay_get_coordinates(input$delay_dest)
+                                                                  , n=100
+                                                                  , addStartEnd=TRUE
+                                                                  , sp=TRUE
+                                                  ) %>% 
+                                                  leaflet() %>% 
+                                                  addProviderTiles(providers$NASAGIBS.ViirsEarthAtNight2012) %>% 
+                                                  addPolylines()
+                                                  
+                                              } else {
+                                                leaflet() %>% 
+                                                  addTiles() %>%
+                                                  setView(lng = -96.25, lat = 39.50, zoom = 4)
+                                              }
                                             } else {
-                                              leaflet() %>% 
-                                                addTiles() %>%
-                                                setView(lng = -96.25, lat = 39.50, zoom = 4)
+                                              if (isTruthy(input$delay_origin) & isTruthy(input$delay_dest)) { 
+                                                gcIntermediate( delay_get_coordinates(input$delay_origin)
+                                                                , delay_get_coordinates(input$delay_dest)
+                                                                , n=100
+                                                                , addStartEnd=TRUE
+                                                                , sp=TRUE
+                                                ) %>% 
+                                                  leaflet() %>% 
+                                                  addTiles() %>% 
+                                                  addPolylines() # ADD MARKERS FOR EACH AIRPORT
+                                              } else {
+                                                leaflet() %>% 
+                                                  addTiles() %>%
+                                                  setView(lng = -96.25, lat = 39.50, zoom = 4)
+                                              }
                                             }
                                           })
                                         }
