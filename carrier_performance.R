@@ -3,6 +3,7 @@ library(tidyverse)
 library(shiny)
 library(geosphere)
 library(ggplot2)
+library(shinyWidgets)
 
 # variable name conventions:
 #   start each variable name with the first word of file
@@ -14,13 +15,20 @@ delay_types <- readRDS('data/delay_types.rds')
 carrier_carriers <- readRDS("data/carriers.rds")
 
 carrier_performance <- tabPanel("Carrier Performance", 
-                        selectInput('selectCarrier', 
-                                    'Aircraft Carrier',
-                                    multiple = TRUE,
-                                    choices = carrier_carriers),
-                        plotOutput('arr_delayPlot'),
-                        plotOutput('delay_typesPlot'),
-                        uiOutput('reviewsPlot'))
+    selectInput('selectCarrier', 
+                'Aircraft Carrier',
+                multiple = TRUE,
+                choices = carrier_carriers,
+                selected = c('NK', 'F9')),
+    fluidPage(
+        fluidRow(
+            column(4, plotOutput('arr_delayPlot')),
+            column(4, plotOutput('delay_typesPlot')),
+            column(4, uiOutput('reviewsPlot'))
+      )
+    )
+)
+
 
 carrier_performance_arr_delay <- function(input) { 
     renderPlot({
