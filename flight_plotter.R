@@ -54,7 +54,7 @@ flight_plotter <- tabPanel("Flight Plotter",
                                                 selectInput("flight_destination_twostop", "Destination",
                                                             choices=flight_airport_names$location),
                                                 ),
-                                checkboxInput("flight_weather", "Show Current Weather Radar", value = FALSE)
+                                checkboxInput("flight_weather", "Show Weather Radar", value = FALSE)
                                            ),
                                      mainPanel(leafletOutput("flight_route_map")
                                                 )
@@ -64,7 +64,7 @@ flight_plotter <- tabPanel("Flight Plotter",
 flight_route_map <- function(input)  {
                                        renderLeaflet({
                                   
-                                                    if (input$flight_type == "nonstop") {
+                                                    if (input$flight_type == "nonstop" && input$flight_weather == FALSE) {
                                                     
                                                       gcIntermediate(flight_get_coordinates(input$flight_origin_nonstop), flight_get_coordinates(input$flight_destination_nonstop),     
                                                           n=100,                
@@ -74,10 +74,27 @@ flight_route_map <- function(input)  {
                                                       leaflet() %>%
                                                       addTiles() %>%
                                                       addPolylines()
+                                                    }
+                                         
+                                                    else if (input$flight_type == "nonstop" && input$flight_weather == TRUE) {
+                                                      
+                                                      gcIntermediate(flight_get_coordinates(input$flight_origin_nonstop), flight_get_coordinates(input$flight_destination_nonstop),     
+                                                                     n=100,                
+                                                                     addStartEnd = TRUE,
+                                                                     sp=TRUE) %>%
+                                                        
+                                                      leaflet() %>%
+                                                      addTiles() %>%
+                                                      addPolylines() %>%
+                                                      addWMSTiles(
+                                                        "http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi",
+                                                        layers = "nexrad-n0r-900913",
+                                                        options = WMSTileOptions(format = "image/png", transparent = TRUE),
+                                                        attribution = "Weather data © 2023 IEM Nexrad")
                                                       
                                                     }
-
-                                                    else if (input$flight_type == "onestop") {
+                                         
+                                                    else if (input$flight_type == "onestop" && input$flight_weather == FALSE) {
                                                       inter1 <- gcIntermediate(flight_get_coordinates(input$flight_origin_onestop), flight_get_coordinates(input$flight_waypoint_onestop),     
                                                               n=100,                
                                                               addStartEnd = TRUE,
@@ -96,8 +113,33 @@ flight_route_map <- function(input)  {
                                                       addTiles() %>% 
                                                       addPolylines()
                                                     }
-
-                                                    else if (input$flight_type == "twostop") {
+                                         
+                                                    else if (input$flight_type == "onestop" && input$flight_weather == TRUE) {
+                                                      inter1 <- gcIntermediate(flight_get_coordinates(input$flight_origin_onestop), flight_get_coordinates(input$flight_waypoint_onestop),     
+                                                                               n=100,                
+                                                                               addStartEnd = TRUE,
+                                                                               sp=TRUE)
+                                                      inter2 <- gcIntermediate(flight_get_coordinates(input$flight_waypoint_onestop), flight_get_coordinates(input$flight_destination_onestop),     
+                                                                               n=100,                
+                                                                               addStartEnd = TRUE,
+                                                                               sp=TRUE)
+                                                      inters <- c(inter1, inter2)
+                                                      
+                                                      ll0 <- lapply( inters , function(x) `@`(x , "lines") )
+                                                      ll1 <- lapply( unlist( ll0 ) , function(y) `@`(y,"Lines") )
+                                                      Sl <- SpatialLines( list( Lines( unlist( ll1 ) , ID = 1 ) ) )
+                                                      
+                                                      leaflet(Sl) %>% 
+                                                      addTiles() %>% 
+                                                      addPolylines() %>%
+                                                      addWMSTiles(
+                                                        "http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi",
+                                                        layers = "nexrad-n0r-900913",
+                                                        options = WMSTileOptions(format = "image/png", transparent = TRUE),
+                                                        attribution = "Weather data © 2023 IEM Nexrad")
+                                                    }
+                                         
+                                                    else if (input$flight_type == "twostop" && input$flight_weather == FALSE) {
                                                       inter1 <- gcIntermediate(flight_get_coordinates(input$flight_origin_twostop), flight_get_coordinates(input$flight_waypoint_1_twostop),     
                                                                                n=100,                
                                                                                addStartEnd = TRUE,
@@ -117,8 +159,36 @@ flight_route_map <- function(input)  {
                                                       Sl <- SpatialLines( list( Lines( unlist( ll1 ) , ID = 1 ) ) )
                                                       
                                                       leaflet(Sl) %>% 
-                                                        addTiles() %>% 
-                                                        addPolylines()
+                                                      addTiles() %>% 
+                                                      addPolylines()
+                                                    }
+                                                    else if (input$flight_type == "twostop"  && input$flight_weather == TRUE) {
+                                                      inter1 <- gcIntermediate(flight_get_coordinates(input$flight_origin_twostop), flight_get_coordinates(input$flight_waypoint_1_twostop),     
+                                                                               n=100,                
+                                                                               addStartEnd = TRUE,
+                                                                               sp=TRUE)
+                                                      inter2 <- gcIntermediate(flight_get_coordinates(input$flight_waypoint_1_twostop), flight_get_coordinates(input$flight_waypoint_2_twostop),     
+                                                                               n=100,                
+                                                                               addStartEnd = TRUE,
+                                                                               sp=TRUE)
+                                                      inter3 <- gcIntermediate(flight_get_coordinates(input$flight_waypoint_2_twostop), flight_get_coordinates(input$flight_destination_twostop),     
+                                                                               n=100,                
+                                                                               addStartEnd = TRUE,
+                                                                               sp=TRUE)
+                                                      inters <- c(inter1, inter2, inter3)
+                                                      
+                                                      ll0 <- lapply( inters , function(x) `@`(x , "lines") )
+                                                      ll1 <- lapply( unlist( ll0 ) , function(y) `@`(y,"Lines") )
+                                                      Sl <- SpatialLines( list( Lines( unlist( ll1 ) , ID = 1 ) ) )
+                                                      
+                                                      leaflet(Sl) %>% 
+                                                      addTiles() %>% 
+                                                      addPolylines() %>%
+                                                      addWMSTiles(
+                                                        "http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi",
+                                                        layers = "nexrad-n0r-900913",
+                                                        options = WMSTileOptions(format = "image/png", transparent = TRUE),
+                                                        attribution = "Weather data © 2023 IEM Nexrad")
                                                     }
                                              })
 }
