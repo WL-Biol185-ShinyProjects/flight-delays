@@ -20,5 +20,7 @@ function(input, output, session) {
   output$reviewsPlot <- carrier_performance_reviews(input)
   
   output$flight_route_map <- flight_route_map(input)
+  
+  output$flight_seat <- flight_seat(input)
 
 }
