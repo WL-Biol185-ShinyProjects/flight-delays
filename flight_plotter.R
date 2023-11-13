@@ -147,9 +147,9 @@ flight_plotter <- tabPanel( "Flight Plotter",
                                                           )
                                                           ),
                                       checkboxInput("flight_weather", "Show Weather Radar", value = FALSE)
-                                           ),
-                                        )
-                             )
+                                                    ),
+                          )
+)
                           
 
 flight_route_map <- function(input)  {
