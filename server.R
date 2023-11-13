@@ -20,5 +20,8 @@ function(input, output, session) {
   output$reviewsPlot <- carrier_performance_reviews(input)
   
   output$flight_route_map <- flight_route_map(input)
+  
+  output$crashes_typePlot <- getting_hijacked_crashes(input)
+  output$crash_expected_table <- crash_expected_table(input)
 
 }
