@@ -7,7 +7,7 @@ library(ggplot2)
 source("flight_plotter.R")
 source("delay_predictor.R")
 source("carrier_performance.R")
-source("carrier_safety.R")
+source("getting_hijacked.R")
 source("airplane_statistics.R")
 
 function(input, output, session) {
@@ -20,7 +20,9 @@ function(input, output, session) {
   output$reviewsPlot <- carrier_performance_reviews(input)
   
   output$flight_route_map <- flight_route_map(input)
-  
   output$flight_seat <- flight_seat(input)
+
+  output$crashes_typePlot <- getting_hijacked_crashes(input)
+  output$crash_expected_table <- crash_expected_table(input)
 
 }
