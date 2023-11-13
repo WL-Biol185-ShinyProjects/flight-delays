@@ -10,4 +10,4 @@ library(shinyWidgets)
 #   so, all variable names on this file will be prefixed
 #   with carrier_*
 
-carrier_safety <- tabPanel('Carrier Safety')
+getting_hijacked <- tabPanel('Getting Hijacked')
