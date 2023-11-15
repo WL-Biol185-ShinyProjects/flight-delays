@@ -97,8 +97,7 @@ delay_predictor_map <- function(input) {  renderLeaflet({
                                                 ) %>% 
                                                   leaflet() %>% 
                                                   addTiles() %>%
-                                                  addPolylines() %>%
-                                                  addMarkers(~long, ~lat, popup = ~as.character(mag), label = ~as.character(mag))
+                                                  addPolylines()
                                               } else {
                                                 leaflet() %>% 
                                                   addTiles() %>%
