@@ -3,7 +3,7 @@ library(tidyverse)
 library(shiny)
 library(geosphere)
 library(ggplot2)
-library(shinyWidgets)
+library(dplyr)
 
 # variable name conventions:
 #   start each variable name with the first word of file
@@ -14,10 +14,11 @@ crashes <- readRDS('data/aircraft_crashes.rds')
 carrier_carriers <- readRDS('data/carriers.rds')
 
 getting_hijacked <- tabPanel('Getting Hijacked',
-    selectInput('selectCarrier',
+    selectizeInput('selectCarrier',
                 'Aircraft Carrier',
                 choices = carrier_carriers,
-                selected = 'AA'),
+                selected = 'AA',
+                multiple = TRUE),
     plotOutput('crashes_typePlot'),
     plotOutput('crash_expected_table')
 )
@@ -25,18 +26,17 @@ getting_hijacked <- tabPanel('Getting Hijacked',
 getting_hijacked_crashes <- function(input) {
     renderPlot({
         crashes %>%
-            filter(OP_CARRIER == input$selectCarrier) %>%
+            filter(OP_CARRIER %in% input$selectCarrier) %>%
             count(INCIDENT_TYPE) %>%
-            ggplot(aes(INCIDENT_TYPE,
-                       n,
+            ggplot(aes_string('INCIDENT_TYPE',
+                       'n',
+                       fill = 'as.factor(OP_CARRIER)',
                        position = 'dodge')) +
                 geom_bar(stat = 'identity',
-                         position = 'dodge') 
-                #I need to fix bar graph to allow multiselect. Problem with count function and can't color code. Adding title crashes the app, idk why. 
-                #+
-                #ggtitle('REASONS FOR PLANE CRASH') +
-                #xlab('INCIDENT TYPE'),
-                #ylab('# OF INCIDENTS / CARRIER')
+                         position = 'dodge') +
+                labs(title = 'REASONS FOR PLANE CRASH',
+                    x = 'INCIDENT TYPE',
+                    y = '# OF INCIDENTS / CARRIER')
     })
 }
 
