@@ -79,14 +79,13 @@ delay_predictor_map <- function(input) {  renderLeaflet({
                                                                   , addStartEnd=TRUE
                                                                   , sp=TRUE
                                                   ) %>% 
-                                                  leaflet() %>% 
+                                                  leaflet() %>%
                                                   addProviderTiles(providers$NASAGIBS.ViirsEarthAtNight2012) %>% 
                                                   addPolylines()
-                                                  
                                               } else {
                                                 leaflet() %>% 
                                                   addTiles() %>%
-                                                  setView(lng = -96.25, lat = 39.50, zoom = 4)
+                                                  setView(lng = -96.25, lat = 39.50, zoom = 5)
                                               }
                                             } else {
                                               if (isTruthy(input$delay_origin) & isTruthy(input$delay_dest)) { 
@@ -97,12 +96,13 @@ delay_predictor_map <- function(input) {  renderLeaflet({
                                                                 , sp=TRUE
                                                 ) %>% 
                                                   leaflet() %>% 
-                                                  addTiles() %>% 
-                                                  addPolylines() # ADD MARKERS FOR EACH AIRPORT
+                                                  addTiles() %>%
+                                                  addPolylines() %>%
+                                                  addMarkers(~long, ~lat, popup = ~as.character(mag), label = ~as.character(mag))
                                               } else {
                                                 leaflet() %>% 
                                                   addTiles() %>%
-                                                  setView(lng = -96.25, lat = 39.50, zoom = 4)
+                                                  setView(lng = -96.25, lat = 39.50, zoom = 5)
                                               }
                                             }
                                           })
