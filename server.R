@@ -21,7 +21,24 @@ function(input, output, session) {
   output$reviewsPlot <- carrier_performance_reviews(input)
   
   output$flight_route_map <- flight_route_map(input)
-  output$aircraft_specifications_table <- aircraft_specifications_table(input)
+  
+  output$engine_information <- engine_information(input)
+  output$aircraft_activity <- aircraft_activity(input)
+  output$weight_capacity <- weight_capacity(input)
+  output$landing_info <- landing_info(input)
+  output$airplane_dimensions <- airplane_dimensions(input)
+  output$regulatory <- regulatory(input)
+  
+  
+  observeEvent(input$landingHelp, {
+    dialog <- modalDialog( title = "Help"
+                            , p("reghkwygituy")
+                            , easyClose = TRUE
+                            , fade = TRUE
+                          )
+    showModal(dialog)
+  })
+  
   output$flight_seat <- flight_seat(input)
   output$crashes_typePlot <- getting_hijacked_crashes(input)
   output$crash_expected_table <- crash_expected_table(input)
