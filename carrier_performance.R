@@ -13,6 +13,15 @@ reviews <- readRDS('data/reviews.rds')
 delay_types <- readRDS('data/delay_types.rds')
 carrier_carriers <- readRDS("data/carriers.rds")
 
+carrier_inList <- function(selectCarrier, a) {
+    for (x in selectCarrier) {
+        if (!(x %in% a)) {
+            FALSE
+      }
+    }
+    TRUE
+}
+
 carrier_performance <- tabPanel("Carrier Performance", 
     selectInput('selectCarrier', 
                 'Aircraft Carrier',
@@ -37,8 +46,8 @@ carrier_performance_arr_delay <- function(input) {
         }) %>%
             do.call(rbind, .) %>%
             ggplot(aes(ARR_DELAY,
-                   fill = OP_CARRIER)) + 
-                geom_density() + 
+                       fill = OP_CARRIER)) + 
+                geom_density(alpha = .2) + 
                 ggtitle('DENSITY OF ARRIVAL DELAY') + 
                 xlab('ARRIVAL DELAY IN MINUTES') +
                 ylab('DENSITY')
@@ -67,21 +76,32 @@ carrier_performance_delay_types <- function(input) {
 carrier_performance_reviews <- function(input) {
     renderUI({
         a <- c('NK', 'WN', 'AA', 'DL', 'UA', 'AS', 'B6', 'F9')
-        if (a %in% input$selectCarrier) {
+        if (carrier_inList(input$selectCarrier, a)) {
             renderPlot({
                 reviews %>%
-                    filter(OP_CARRIERS == input$selectCarrier) %>%
+                    filter(OP_CARRIERS %in% input$selectCarrier) %>%
                     ggplot(aes(REVIEWS,
-                          fill = OP_CARRIERS)) +
+                               fill = OP_CARRIERS)) +
                         geom_density() +
                         scale_x_continuous(breaks = 1:10, 
-                                          labels = 1:10) +
+                                           labels = 1:10) +
                         ggtitle('DENSITY OF REVIEWS (1-10)') +
                         xlab('REVIEWS (1-10)') +
                         ylab('DENSITY')
             })
         } else { 
-          print('DATA UNAVAILABLE')   
+              renderPlot({
+                  reviews %>%
+                      filter(OP_CARRIERS %in% input$selectCarrier) %>%
+                      ggplot(aes(REVIEWS,
+                                 fill = OP_CARRIERS)) +
+                          geom_density() +
+                          scale_x_continuous(breaks = 1:10, 
+                                             labels = 1:10) +
+                          ggtitle('DENSITY OF REVIEWS (1-10) - data not available for carriers selected') +
+                          xlab('REVIEWS (1-10)') +
+                          ylab('DENSITY')
+            })
         }
     })
 }
