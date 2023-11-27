@@ -1,4 +1,3 @@
-library(leaflet)
 library(shiny)
 
 aircrafts <- readRDS("data/aircrafts.rds")
@@ -9,7 +8,7 @@ get_airplanestats <- function(name) {
 }
 
 airplane_statistics <- tabPanel("Airplane Information",
-  tags$style(type = "text/css", "#landing-gear { display: inline; }"),
+  tags$style(type = "text/css", "#landing-info { display: inline }", "#engine-info { display: inline }", "#regulatory-info { display: inline }"), 
   fluidPage(
     fluidRow(
         column(12,
@@ -18,7 +17,7 @@ airplane_statistics <- tabPanel("Airplane Information",
               selectizeInput( inputId  = "airplane_model"
                               , label = ""
                               , choices  = aircrafts$Model_FAA
-                              , selected = "Boeing 747-300"
+                              , selected = "Airbus A320"
                               , options  = list( create = FALSE
                                                  , placeholder = "Search..."
                                                  , maxItems = "1"
@@ -32,7 +31,8 @@ airplane_statistics <- tabPanel("Airplane Information",
     fluidRow(
         column(4,
           wellPanel(
-            h4("Engine Information"),
+            h4(id = "engine-info", "Engine Information"),
+            actionButton("engineHelp", "", icon = icon("info")),
             uiOutput("engine_information")
                     )
               ),
@@ -53,7 +53,7 @@ airplane_statistics <- tabPanel("Airplane Information",
         column(4,
           wellPanel(
             h4(id = "landing-info", "Landing Information"),
-            actionButton("landingHelp", "", icon = icon("info")),
+            actionButton("landingHelp", "", icon = icon("info")), 
             uiOutput("landing_info")
                     )
               ),
@@ -65,9 +65,18 @@ airplane_statistics <- tabPanel("Airplane Information",
               ),
         column(4,
           wellPanel(
-            h4("Regulatory Information"),
+            h4(id = "regulatory-info", "Regulatory Information"),
+            actionButton("regulatoryHelp", "", icon = icon("info")),
             uiOutput("regulatory")  
                     )
+              )
+            ),
+    fluidRow(
+        column(12,
+          wellPanel(
+            h4("Aircraft Images"),
+            uiOutput("aircraft_images")
+                    )   
               )
             )
       )
@@ -120,8 +129,7 @@ landing_info <- function(input) {
     tagList(
       p(strong("Landing Gear Width:"), landing_row$Main_Gear_Width_ft, "ft"),
       p(strong("Landing Gear Configuration:"), landing_row$Main_Gear_Config),
-      p(strong("Maximum Approach Speed:"), landing_row$Approach_Speed_knot, "knots"),
-      p(strong(""))
+      p(strong("Maximum Approach Speed:"), landing_row$Approach_Speed_knot, "knots")
       
     )
   })
@@ -135,7 +143,7 @@ airplane_dimensions <- function(input)  {
       p(strong("Wingspan:"), dimensions_row$Wingspan_ft_without_winglets_sharklets, "ft"),
       p(strong("Length:"), dimensions_row$Length_ft, "ft"),
       p(strong("Tail Height:"), dimensions_row$Tail_Height_at_OEW_ft, "ft"),
-      p(strong("Parking Area:"), dimensions_row$Parking_Area_ft2, "ft2") ### how to do superscript?
+      p(strong("Parking Area:"), dimensions_row$Parking_Area_ft2, "ft^2")
         
     )
   })
@@ -147,20 +155,21 @@ regulatory <- function(input)  {
     regulatory_row <- get_airplanestats(input$airplane_model)
     
     tagList(
-      p(strong("SRS Designation"), regulatory_row$SRS),
       p(strong("CWT Designation"), regulatory_row$CWT),
       p(strong("AAC Designation"), regulatory_row$AAC),
       p(strong("ADG Designation"), regulatory_row$ADG),
       p(strong("WTC Designation"), regulatory_row$ICAO_WTC)
       
     )
-      
   })
 }
 
-
-
-###    approach_speed <- get_approach_speed(input$airplane_model)
-###    wingspan <- get_wingspan(input$airplane_model)
-###    length <- get_length(input$airplane_model)
-###    wheelbase <- get_wheelbase(input$airplane_model)
+aircraft_images <- function(input)  {
+  renderUI ({
+    
+    
+    
+  })
+  
+  
+}
