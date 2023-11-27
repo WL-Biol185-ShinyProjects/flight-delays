@@ -15,9 +15,9 @@ carrier_carriers <- readRDS('data/carriers.rds')
 
 getting_hijacked <- tabPanel('Getting Hijacked',
     selectizeInput('chooseCarrier',
-                'Aircraft Carrier',
-                choices = carrier_carriers,
-                selected = 'UA'),
+                   'Aircraft Carrier',
+                    choices = carrier_carriers,
+                    selected = 'UA'),
     plotOutput('crashes_typePlot'),
     uiOutput('crash_expected_table')
 )
