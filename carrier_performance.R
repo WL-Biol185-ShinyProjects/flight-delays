@@ -58,10 +58,11 @@ carrier_performance_arr_delay <- function(input) {
 carrier_performance_delay_types <- function(input) {
     renderPlot({
         delay_types %>%
+            rename(AIRCRAFT = 'LATE_AIRCRAFT_DELAY', NAS = 'NAS_DELAY', CARRIER = 'CARRIER_DELAY', WEATHER = 'WEATHER_DELAY', SECURITY = 'SECURITY_DELAY') %>%
             filter(OP_CARRIER %in% input$selectCarrier) %>%
             gather('DELAY_TYPE', 
                    'COUNTS',
-                   'CARRIER_DELAY':'LATE_AIRCRAFT_DELAY') %>%
+                   'CARRIER':'AIRCRAFT') %>%
             ggplot(aes(DELAY_TYPE, 
                        COUNTS,
                        fill = OP_CARRIER,
