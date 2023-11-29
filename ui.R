@@ -11,7 +11,7 @@ source("carrier_performance.R")
 source("getting_hijacked.R")
 source("airplane_statistics.R")
 
-navbarPage("Flights",
+navbarPage("Airborne Analytics",
            flight_plotter,
            delay_predictor,
            carrier_performance,
