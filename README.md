@@ -1,36 +1,68 @@
-# flight-delays
-Analysis of flight delay data from 2009-2020
+# Flights App
 
-https://www.kaggle.com/datasets/sherrytp/airline-delay-analysis/data
+## Overview
 
-https://www.kaggle.com/datasets/aravindram11/list-of-us-airports
+"Flights" is a user friendly and feature rich application designed to provide a plethora of information about flights, airlines, and aircraft. Whether you're a traveler looking to book a flight or simply an aircraft enthusiast looking to learn, "Flights" has you covered. This application offers a seamless and intuitive experience, making it easy for users to learn and make informed travel decisions.
 
+## Features
+
+### 1. Flight Plotter
+
+Want to see the path your flight will likely follow? This application will generate accurate flight paths for nonstop, one-stop, or two-stop flights between any airports in the United States of America based on great circle calculation algorithms. 
+
+### 2. Delay Predictor
+
+Looking to book a flight? Input your origin and destination airports along with departure time to see relevant delay statistics.
+
+### 3. Carrier Performance
+
+Not sure which carrier to fly? Input any number of USA based airlines to compare delay densities, delay counts, and overall airline reviews. 
+
+### 4. Crash Data
+
+Scared of flying? See crash statistics across various USA based airlines. 
+
+### 5. Airplane Information
+
+Curious about the specifications of a specific aircraft? Input the aircraft and watch as the application presents a myriad of data regarding that aircraft. 
+
+## Technologies Used
+
+### Packages Used
+
+Leaflet <br>
+Tidyverse <br>
+Shiny <br>
+Geosphere <br>
+GGplot2 <br>
+Dplyr <br>
+Sp <br>
+Shinytime 
+
+### APIs
+
+Iowa State University API for live weather radar images
+
+## Data Sources
+
+Aircraft Characteristics Data from the Federal Aviation Administration <br>
+https://www.faa.gov/airports/engineering/aircraft_char_database/data
+
+List of US Airports compiled by Aravind Ram Nathan, acquired through Kaggle <br>
+https://www.kaggle.com/datasets/aravindram11/list-of-us-airports/data
+
+Airline Reviews compiled by Efehan, acquired through Kaggle <br>
 https://www.kaggle.com/datasets/efehandanisman/skytrax-airline-reviews
 
-https://www.kaggle.com/datasets/sergejnuss/united-states-cities-database
+Airline Delay Analysis compiled by Sherry, acquired through Kaggle <br>
+https://www.kaggle.com/datasets/sherrytp/airline-delay-analysis/data
 
-Project Plan:
+## License
 
+This project is licensed under the GNU General Public License v3.0 - see the LICENSE file for details.
 
+## Acknowledgements
 
+Special thanks to Dr. Gregg Whitworth for his assistance in the development of this application.
 
-Plot flights against weather
-Look at average delay based on route within time blocks
-
-
-Notes:
-Plot flight paths on map with origin and final destination using:
-    https://stackoverflow.com/questions/34499212/adding-curved-flight-path-using-rs-leaflet-package
-  
-"Flight Status" ish page
-    User inputs flight number and date of travel
-    Page displays: map with flight path, weather radar, average delay plot over time
-    
- Flight Finder
-    User inputs: date of travel, origin, destination
-    Page displays: airline/ flight options, flight times, average delay of flight options
-    multi city capability that lets you add multiple cities
-
-
- Side of the plane to sit on based on city location relative to the aiport
- 
+## Feel free to reach out to us with any questions or feedback. Happy flying!
