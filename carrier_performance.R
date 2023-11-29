@@ -16,10 +16,10 @@ carrier_carriers <- readRDS("data/carriers.rds")
 carrier_inList <- function(selectCarrier, a) {
     for (x in selectCarrier) {
         if (!(x %in% a)) {
-            FALSE
+            return(FALSE)
       }
     }
-    TRUE
+    return(TRUE)
 }
 
 carrier_performance <- tabPanel("Carrier Performance", 
@@ -76,20 +76,9 @@ carrier_performance_delay_types <- function(input) {
 carrier_performance_reviews <- function(input) {
     renderUI({
         a <- c('NK', 'WN', 'AA', 'DL', 'UA', 'AS', 'B6', 'F9')
-        if (carrier_inList(input$selectCarrier, a)) {
-            renderPlot({
-                reviews %>%
-                    filter(OP_CARRIERS %in% input$selectCarrier) %>%
-                    ggplot(aes(REVIEWS,
-                               fill = OP_CARRIERS)) +
-                        geom_density() +
-                        scale_x_continuous(breaks = 1:10, 
-                                           labels = 1:10) +
-                        ggtitle('DENSITY OF REVIEWS (1-10)') +
-                        xlab('REVIEWS (1-10)') +
-                        ylab('DENSITY')
-            })
-        } else { 
+        if (length(input$selectCarrier) == 1 && !(input$selectCarrier %in% a)) {
+            return('DATA UNAVAILABLE FOR SELECTED CARRIER')
+        } else {
               renderPlot({
                   reviews %>%
                       filter(OP_CARRIERS %in% input$selectCarrier) %>%
@@ -98,11 +87,10 @@ carrier_performance_reviews <- function(input) {
                           geom_density() +
                           scale_x_continuous(breaks = 1:10, 
                                              labels = 1:10) +
-                          ggtitle('DENSITY OF REVIEWS (1-10) - data not available for carriers selected') +
+                          ggtitle('DENSITY OF REVIEWS (1-10)') +
                           xlab('REVIEWS (1-10)') +
                           ylab('DENSITY')
-            })
-        }
+              })
+          }
     })
 }
-                                
