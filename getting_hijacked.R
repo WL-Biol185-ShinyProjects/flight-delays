@@ -16,7 +16,7 @@ carrier_carriers <- readRDS('data/carriers.rds')
 getting_hijacked <- tabPanel('Getting Hijacked',
     selectizeInput('chooseCarrier',
                    'Aircraft Carrier',
-                    choices = carrier_carriers,
+                    choices = carrier_carriers[-13],
                     selected = 'UA'),
     plotOutput('crashes_typePlot'),
     uiOutput('crash_expected_table')
@@ -39,19 +39,15 @@ getting_hijacked_crashes <- function(input) {
 crash_expected_table <- function(input) { 
     renderUI({ 
         crash_hijacked <- 100 * (nrow(filter(crashes, 
-                                             OP_CARRIER == input$chooseCarrier & (INCIDENT_TYPE == "Hijacking | repairable-damage" | INCIDENT_TYPE == "Hijacking | hull-loss" | INCIDENT_TYPE == "Criminal occurrence (sabotage, shoot down) | repairable-damage")))/nrow(filter(crashes, 
-                                                                                                                                                                                                                                                                                OP_CARRIER == input$chooseCarrier)))
+                                             OP_CARRIER == input$chooseCarrier & (INCIDENT_TYPE == "Hijacking | repairable-damage" | INCIDENT_TYPE == "Hijacking | hull-loss" | INCIDENT_TYPE == "Criminal occurrence (sabotage, shoot down) | repairable-damage" | INCIDENT_TYPE == "Criminal occurrence (sabotage, shoot down) | hull-loss")))/nrow(filter(crashes, 
+                                                                                                                                                                                                                                                                                                                                                             OP_CARRIER == input$chooseCarrier)))
         crash_collision <- 100 * (nrow(filter(crashes,
-                                              OP_CARRIER == input$chooseCarrier & (INCIDENT_TYPE == "Accident | repairable-damage" | INCIDENT_TYPE == "Accident | hull-loss" | INCIDENT_TYPE == "other occurence (ground fire, sabotage) | hull-loss")))/nrow(filter(crashes, 
-                                                                                                                                                                                                                                                                     OP_CARRIER == input$chooseCarrier)))
-        crash_engineAccident <- 100 * (nrow(filter(crashes, 
-                                                   OP_CARRIER == input$chooseCarrier & (grepl("Airplane - Engines, Airplane - Engines", CAUSE, fixed = TRUE))))/nrow(filter(crashes, 
-                                                                                                                                                                            OP_CARRIER == input$chooseCarrier)))
+                                              OP_CARRIER == input$chooseCarrier & (INCIDENT_TYPE == "Accident | repairable-damage" | INCIDENT_TYPE == "Accident | hull-loss" | INCIDENT_TYPE == "other occurrence (ground fire, sabotage) | hull-loss" | INCIDENT_TYPE == "other occurrence (ground fire, sabotage) | repairable-damage")))/nrow(filter(crashes,   
+                                                                                                                                                                                                                                                                                                                                                        OP_CARRIER == input$chooseCarrier)))
         
         tagList(
-          p(strong("Percentage of Crashes due to Hijacking: "), crash_hijacked, "%"),
-          p(strong("Percentage of Crashes due to Collision: "), crash_collision, "%"),
-          p(strong("Percentage of Crashes due to Engine Failure: "), crash_engineAccident, "%")
+          p(strong("Percentage of Crashes due to Hijacking: "), format(crash_hijacked, digits = 2), "%"),
+          p(strong("Percentage of Crashes due to Collision or Engine Failure: "), format(crash_collision, digits = 2), "%"),
         )
   })
 } 

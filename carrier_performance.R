@@ -59,8 +59,8 @@ carrier_performance_delay_types <- function(input) {
         delay_types %>%
             filter(OP_CARRIER %in% input$selectCarrier) %>%
             gather('DELAY_TYPE', 
-                  'COUNTS',
-                  'CARRIER_DELAY':'LATE_AIRCRAFT_DELAY') %>%
+                   'COUNTS',
+                   'CARRIER_DELAY':'LATE_AIRCRAFT_DELAY') %>%
             ggplot(aes(DELAY_TYPE, 
                        COUNTS,
                        fill = OP_CARRIER,
