@@ -13,7 +13,7 @@ library(dplyr)
 crashes <- readRDS('data/aircraft_crashes.rds')
 carrier_carriers <- readRDS('data/carriers.rds')
 
-getting_hijacked <- tabPanel('Getting Hijacked',
+getting_hijacked <- tabPanel('Crash Data',
     selectizeInput('chooseCarrier',
                    'Aircraft Carrier',
                     choices = carrier_carriers[-13],
@@ -25,6 +25,15 @@ getting_hijacked <- tabPanel('Getting Hijacked',
 getting_hijacked_crashes <- function(input) {
     renderPlot({
         crashes %>%
+            mutate(INCIDENT_TYPE = case_when(
+                INCIDENT_TYPE == "Accident | repairable-damage" ~ "Repairable Accident",
+                INCIDENT_TYPE == "Accident | hull-loss" ~ "Irrepairable Accident",
+                INCIDENT_TYPE == "Hijacking | hull-loss" ~ "Irrepairable Hijacking",
+                INCIDENT_TYPE == "Hijacking | repairable-damage" ~ "Repairable Hijacking",
+                INCIDENT_TYPE == "other occurrence (ground fire, sabotage) | hull-loss" ~ "Other (irrepairable)",
+                INCIDENT_TYPE == "other occurrence (ground fire, sabotage) | repairable-damage" ~ "Other (repairable)",
+                INCIDENT_TYPE == "Criminal occurrence (sabotage, shoot down) | repairable-damage" ~ "Criminal (repairable)",
+                INCIDENT_TYPE == "Criminal occurrence (sabotage, shoot down) | hull-loss" ~ "Criminal (irrepairable)")) %>%
             filter(OP_CARRIER == input$chooseCarrier) %>%
             count(INCIDENT_TYPE) %>%
             ggplot(aes(INCIDENT_TYPE, n, fill = INCIDENT_TYPE)) +
