@@ -1,8 +1,8 @@
-# Flights App
+# Airborne Analytics
 
 ## Overview
 
-"Flights" is a user friendly and feature rich application designed to provide a plethora of information about flights, airlines, and aircraft. Whether you're a traveler looking to book a flight or simply an aircraft enthusiast looking to learn, "Flights" has you covered. This application offers a seamless and intuitive experience, making it easy for users to learn and make informed travel decisions.
+Airborne Analytics is a user friendly and feature rich application designed to provide a plethora of information about flights, airlines, and aircraft. Whether you're a traveler looking to book a flight or simply an aircraft enthusiast looking to learn, Airborne Analytics has you covered. This application offers a seamless and intuitive experience, making it easy for users to learn and make informed travel decisions.
 
 ## Features
 
