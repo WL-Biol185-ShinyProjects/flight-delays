@@ -22,7 +22,8 @@ carrier_inList <- function(selectCarrier, a) {
     return(TRUE)
 }
 
-carrier_performance <- tabPanel("Carrier Performance", 
+carrier_performance <- tabPanel("Carrier Performance",
+    tags$script(HTML("document.querySelectorAll('[data-value=\"Carrier Performance\"]')[1].style.paddingLeft = \"4vw\"; document.querySelectorAll('[data-value=\"Carrier Performance\"]')[1].style.paddingRight = \"4vw\";")),
     selectInput('selectCarrier', 
                 'Aircraft Carrier',
                 multiple = TRUE,
@@ -32,7 +33,7 @@ carrier_performance <- tabPanel("Carrier Performance",
         fluidRow(
             column(4, plotOutput('arr_delayPlot')),
             column(4, plotOutput('delay_typesPlot')),
-            column(4, uiOutput('reviewsPlot'))
+            column(4, uiOutput('reviewsPlot')),
       )
     )
 )
@@ -84,7 +85,7 @@ carrier_performance_reviews <- function(input) {
                       filter(OP_CARRIERS %in% input$selectCarrier) %>%
                       ggplot(aes(REVIEWS,
                                  fill = OP_CARRIERS)) +
-                          geom_density() +
+                          geom_density(alpha = .2) +
                           scale_x_continuous(breaks = 1:10, 
                                              labels = 1:10) +
                           ggtitle('DENSITY OF REVIEWS (1-10)') +
