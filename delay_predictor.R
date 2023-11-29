@@ -20,7 +20,7 @@ delay_get_coordinates <- function(code) { d <- delay_airports %>%
                                         }
 
 delay_predictor <- tabPanel( "Delay Predictor"
-                            , tags$style(type = "text/css", "html, body { width: 100%; height: 150% } #controls { background-color: rgba(255,255,255,.75); padding: 30px; cursor: move; transition: opacity 500ms 1s; } .wrapper { position: fixed; top: 100px; left: 0; right: 0; bottom: 0; top: 0; overflow: hidden; padding: 0; } .leaflet-control-container { display: none; } em { font-size: 11px }")
+                            , tags$style(type = "text/css", "html, body { width: 100%; height: 150% } #controls { background-color: rgba(255,255,255,.65); padding: 30px; cursor: move; transition: .7s; } #controls:hover { background-color: rgba(255,255,255,.95); transition: .7s; } .wrapper { position: fixed; top: 100px; left: 0; right: 0; bottom: 0; top: 0; overflow: hidden; padding: 0; } .leaflet-control-container { display: none; } em { font-size: 11px }")
                             , div( class = "wrapper"
                                  , leafletOutput("delay_predictor_map", width = "100%", height = "100%" )
                                  , absolutePanel( id = "controls", fixed = TRUE, top = 60, right = 20, left = "auto", bottom = "auto", width = 330, height = "auto"
