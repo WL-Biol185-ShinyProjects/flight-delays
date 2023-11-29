@@ -40,7 +40,8 @@ getting_hijacked_crashes <- function(input) {
             count(INCIDENT_TYPE) %>%
             ggplot(aes(INCIDENT_TYPE, n, fill = INCIDENT_TYPE)) +
                 geom_bar(stat = 'identity',
-                         position = 'dodge') +
+                         position = 'dodge',
+                         width = 0.2) +
                 labs(title = 'REASONS FOR PLANE CRASH',
                     x = 'INCIDENT TYPE',
                     y = '# OF INCIDENTS / CARRIER')
