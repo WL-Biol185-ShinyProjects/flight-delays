@@ -58,8 +58,8 @@ crash_expected_table <- function(input) {
                                                                                                                                                                                                                                                                                                                                                         OP_CARRIER == input$chooseCarrier)))
         
         tagList(
-          p(strong("Percentage of Crashes due to Hijacking: "), format(crash_hijacked, digits = 2), "%"),
-          p(strong("Percentage of Crashes due to Collision or Engine Failure: "), format(crash_collision, digits = 2), "%"),
+            p(strong("Percentage of Crashes due to Hijacking: "), format(crash_hijacked, digits = 2), "%"),
+            p(strong("Percentage of Crashes due to Collision or Engine Failure: "), format(crash_collision, digits = 2), "%"),
         )
   })
 } 
