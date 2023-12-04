@@ -14,7 +14,7 @@ crashes <- readRDS('data/aircraft_crashes.rds')
 carrier_carriers <- readRDS('data/carriers.rds')
 
 getting_hijacked <- tabPanel('Crash Data',
-   tags$script(HTML("document.querySelectorAll('[data-value=\"Carrier Performance\"]')[1].style.paddingLeft = \"4vw\"; document.querySelectorAll('[data-value=\"Carrier Performance\"]')[1].style.paddingRight = \"4vw\";")),
+   tags$script(HTML("document.querySelectorAll('[data-value=\"Crash Data\"]')[1].style.paddingLeft = \"4vw\"; document.querySelectorAll('[data-value=\"Crash Data\"]')[1].style.paddingRight = \"4vw\";")),
 
     selectizeInput('chooseCarrier',
                    'Aircraft Carrier',

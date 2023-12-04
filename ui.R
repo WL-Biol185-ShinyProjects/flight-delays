@@ -1,6 +1,7 @@
 library(leaflet)
 library(tidyverse)
 library(shiny)
+library(shinyjs)
 library(geosphere)
 library(ggplot2)
 library(dplyr)
@@ -11,10 +12,11 @@ source("carrier_performance.R")
 source("getting_hijacked.R")
 source("airplane_statistics.R")
 
+
 navbarPage("Flights",
            flight_plotter,
            delay_predictor,
            carrier_performance,
            getting_hijacked,
-           airplane_statistics
+           airplane_statistics,
           )
