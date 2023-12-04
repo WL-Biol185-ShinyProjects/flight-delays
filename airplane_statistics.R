@@ -9,7 +9,6 @@ get_airplanestats <- function(name) {
 
 airplane_statistics <- tabPanel("Airplane Information",
   tags$style(type = "text/css", "#landing-info { display: inline }", "#engine-info { display: inline }", "#regulatory-info { display: inline }"),
-  tags$script(HTML("document.querySelectorAll('[data-value=\"Airplane Information\"]')[1].style.paddingLeft = \"4vw\"; document.querySelectorAll('[data-value=\"Airplane Information\"]')[1].style.paddingRight = \"4vw\";")),
   fluidPage(
     fluidRow(
         column(12,

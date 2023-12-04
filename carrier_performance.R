@@ -13,6 +13,8 @@ library(shinyjs)
 reviews <- readRDS('data/reviews.rds')
 delay_types <- readRDS('data/delay_types.rds')
 carrier_carriers <- readRDS("data/carriers.rds")
+crashes <- readRDS('data/aircraft_crashes.rds')
+
 
 carrier_inList <- function(selectCarrier, a) {
     for (x in selectCarrier) {
@@ -26,7 +28,7 @@ carrier_inList <- function(selectCarrier, a) {
 carrier_css <- "
   #preloader {
     position: fixed;
-    top: 0;
+    top: 50px;
     left: 0;
     width: 100%;
     height: 100%;
@@ -38,36 +40,6 @@ carrier_css <- "
     background: none repeat scroll 0 0 #ffffff;
   }
 
-  .spinner {
-    border: 1px solid transparent;
-    border-radius: 3px;
-    position: relative;
-  }
-
-  .spinner:before {
-    content: '';
-    box-sizing: border-box;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 45px;
-    height: 45px;
-    margin-top: -10px;
-    margin-left: -10px;
-    border-radius: 50%;
-    border: 1px solid #575757;
-    border-top-color: #ffffff;
-    animation: spinner .9s linear infinite;
-  }
-
-  @-webkit-keyframes spinner {
-    to {transform: rotate(360deg);}
-  }
-
-  @keyframes spinner {
-    to {transform: rotate(360deg);}
-  }
-
   @keyframes pulse { 
     from {opacity: .6; transform: scale(1);}
     to {opacity: .001; transform: scale(3);}
@@ -75,7 +47,7 @@ carrier_css <- "
 
 .centerpiece { 
     position: fixed;
-    top: 50%;
+    top: calc(50% + 50px);
     left: 50%;
     transform: translate(-50%, -50%);
   }
@@ -101,36 +73,41 @@ carrier_css <- "
   "
 
 carrier_performance <- tabPanel("Carrier Performance",
-    tags$script(HTML("document.querySelectorAll('[data-value=\"Carrier Performance\"]')[1].style.paddingLeft = \"4vw\"; document.querySelectorAll('[data-value=\"Carrier Performance\"]')[1].style.paddingRight = \"4vw\"; ")),
     tags$script(src = "https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"),
-    fluidPage(
-      useShinyjs(),
-      inlineCSS(carrier_css),
-      div(
-        id = "preloader",
-        img(
-          class = "preloader-img",
-          src = "preloader.png"
-        ),
-        div(
-          class = "centerpiece",
-          div(
-            class = "pulse"
-          )
-        )
+    useShinyjs(),
+    inlineCSS(carrier_css),
+    div(
+      id = "preloader",
+      img(
+        class = "preloader-img",
+        src = "preloader.png"
       ),
-      fluidRow(
+      div(
+        class = "centerpiece",
+        div(
+          class = "pulse"
+        )
+      )
+    ),
+    sidebarLayout(
+      sidebarPanel = sidebarPanel(
         selectInput('selectCarrier', 
                     'Aircraft Carrier',
                     multiple = TRUE,
                     choices = carrier_carriers,
                     selected = c('NK', 'F9')
-        )
+        ), width = 2
       ),
-      fluidRow(
-        column(4, plotOutput('arr_delayPlot')),
-        column(4, plotOutput('delay_typesPlot')),
-        column(4, uiOutput('reviewsPlot')),
+      
+      mainPanel = mainPanel(
+        fluidRow(
+          column(6, plotOutput('arr_delayPlot')),
+          column(6, plotOutput('delay_typesPlot'))
+        ),
+        fluidRow(
+          column(6, uiOutput('reviewsPlot')),
+          column(6, plotOutput('crashes_typePlot'), uiOutput('crash_expected_table'))
+        ), width = 10
       )
     )
 )
@@ -192,3 +169,43 @@ carrier_performance_reviews <- function(input) {
 
     })
 }
+
+getting_hijacked_crashes <- function(input) {
+  renderPlot({
+    crashes %>%
+      mutate(INCIDENT_TYPE = case_when(
+        INCIDENT_TYPE == "Accident | repairable-damage" ~ "Repairable Accident",
+        INCIDENT_TYPE == "Accident | hull-loss" ~ "Irrepairable Accident",
+        INCIDENT_TYPE == "Hijacking | hull-loss" ~ "Irrepairable Hijacking",
+        INCIDENT_TYPE == "Hijacking | repairable-damage" ~ "Repairable Hijacking",
+        INCIDENT_TYPE == "other occurrence (ground fire, sabotage) | hull-loss" ~ "Other (irrepairable)",
+        INCIDENT_TYPE == "other occurrence (ground fire, sabotage) | repairable-damage" ~ "Other (repairable)",
+        INCIDENT_TYPE == "Criminal occurrence (sabotage, shoot down) | repairable-damage" ~ "Criminal (repairable)",
+        INCIDENT_TYPE == "Criminal occurrence (sabotage, shoot down) | hull-loss" ~ "Criminal (irrepairable)")) %>%
+      filter(OP_CARRIER %in% input$selectCarrier) %>%
+      count(INCIDENT_TYPE) %>%
+      ggplot(aes(INCIDENT_TYPE, n, fill = INCIDENT_TYPE)) +
+      geom_bar(stat = 'identity',
+               position = 'dodge',
+               width = 0.2) +
+      labs(title = 'REASONS FOR PLANE CRASH',
+           x = 'INCIDENT TYPE',
+           y = '# OF INCIDENTS / CARRIER')
+  })
+}
+
+crash_expected_table <- function(input) { 
+  renderUI({ 
+    crash_hijacked <- 100 * (nrow(filter(crashes, 
+                                         OP_CARRIER == input$selectCarrier & (INCIDENT_TYPE == "Hijacking | repairable-damage" | INCIDENT_TYPE == "Hijacking | hull-loss" | INCIDENT_TYPE == "Criminal occurrence (sabotage, shoot down) | repairable-damage" | INCIDENT_TYPE == "Criminal occurrence (sabotage, shoot down) | hull-loss")))/nrow(filter(crashes, 
+                                                                                                                                                                                                                                                                                                                                                         OP_CARRIER == input$selectCarrier)))
+    crash_collision <- 100 * (nrow(filter(crashes,
+                                          OP_CARRIER == input$selectCarrier & (INCIDENT_TYPE == "Accident | repairable-damage" | INCIDENT_TYPE == "Accident | hull-loss" | INCIDENT_TYPE == "other occurrence (ground fire, sabotage) | hull-loss" | INCIDENT_TYPE == "other occurrence (ground fire, sabotage) | repairable-damage")))/nrow(filter(crashes,   
+                                                                                                                                                                                                                                                                                                                                                    OP_CARRIER == input$selectCarrier)))
+    
+    tagList(
+      p(strong("Percentage of Crashes due to Hijacking: "), format(crash_hijacked, digits = 2), "%"),
+      p(strong("Percentage of Crashes due to Collision or Engine Failure: "), format(crash_collision, digits = 2), "%"),
+    )
+  })
+} 

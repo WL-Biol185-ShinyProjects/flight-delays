@@ -9,7 +9,6 @@ library(dplyr)
 source("flight_plotter.R")
 source("delay_predictor.R")
 source("carrier_performance.R")
-source("getting_hijacked.R")
 source("airplane_statistics.R")
 source("about_page.R")
 
@@ -17,7 +16,6 @@ navbarPage("Airborne Analytics",
            flight_plotter,
            delay_predictor,
            carrier_performance,
-           getting_hijacked,
            airplane_statistics,
            about_page
           )

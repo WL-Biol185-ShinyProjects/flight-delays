@@ -8,7 +8,6 @@ library(dplyr)
 source("flight_plotter.R")
 source("delay_predictor.R")
 source("carrier_performance.R")
-source("getting_hijacked.R")
 source("airplane_statistics.R")
 source("about_page.R")
 
