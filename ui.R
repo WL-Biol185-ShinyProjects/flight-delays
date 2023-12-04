@@ -13,10 +13,10 @@ source("airplane_statistics.R")
 source("about_page.R")
 
 navbarPage("Airborne Analytics",
-           about_page,
            flight_plotter,
            delay_predictor,
            carrier_performance,
            getting_hijacked,
-           airplane_statistics
+           airplane_statistics,
+           about_page
           )
