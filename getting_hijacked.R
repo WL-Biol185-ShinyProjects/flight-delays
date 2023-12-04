@@ -40,7 +40,8 @@ getting_hijacked_crashes <- function(input) {
             count(INCIDENT_TYPE) %>%
             ggplot(aes(INCIDENT_TYPE, n, fill = INCIDENT_TYPE)) +
                 geom_bar(stat = 'identity',
-                         position = 'dodge') +
+                         position = 'dodge',
+                         width = 0.2) +
                 labs(title = 'REASONS FOR PLANE CRASH',
                     x = 'INCIDENT TYPE',
                     y = '# OF INCIDENTS / CARRIER')
@@ -57,8 +58,8 @@ crash_expected_table <- function(input) {
                                                                                                                                                                                                                                                                                                                                                         OP_CARRIER == input$chooseCarrier)))
         
         tagList(
-          p(strong("Percentage of Crashes due to Hijacking: "), format(crash_hijacked, digits = 2), "%"),
-          p(strong("Percentage of Crashes due to Collision or Engine Failure: "), format(crash_collision, digits = 2), "%"),
+            p(strong("Percentage of Crashes due to Hijacking: "), format(crash_hijacked, digits = 2), "%"),
+            p(strong("Percentage of Crashes due to Collision or Engine Failure: "), format(crash_collision, digits = 2), "%"),
         )
   })
 } 
