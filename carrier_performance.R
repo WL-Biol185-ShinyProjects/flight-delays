@@ -95,7 +95,21 @@ carrier_performance <- tabPanel("Carrier Performance",
                     multiple = TRUE,
                     choices = carrier_carriers,
                     selected = c('NK', 'F9')
-        ), width = 2),
+        ), width = 2, 
+        h3('Density of Arrival Delay'),
+        p('Shows the density of arrival delay by domestic carrier.'),
+        h3('Counts of Delay Types'),
+        p('Shows the number of delays by various categories. 
+          Aircraft delay - delay as a result of lateness by the same aircraft (if the plane was late at the previous airport and therefore late at yours).
+          Carrier delay - delay within the control of the carrier (cleaning, fueling, etc).
+          NAS delay - delay forced by the National Airspace System (heavy traffic, air traffic control).
+          Security delay - delay caused by safety concerns, re-boarding, or evacuation. 
+          Weather - delay caused by extreme, hazardous weather.'),
+        h3('Density of Reviews'),
+        p('Shows the density of passenger reviews from 1-10.'),
+        h3('Reasons for Plane Crash'),
+        p('Shows the number of plane crashes categorically by incident type. Damage to aircraft was either repairable or irrepairable.')
+        ),
       
       mainPanel = mainPanel(
         fluidRow(
