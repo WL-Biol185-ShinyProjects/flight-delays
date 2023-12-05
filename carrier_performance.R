@@ -15,7 +15,6 @@ delay_types <- readRDS('data/delay_types.rds')
 carrier_carriers <- readRDS("data/carriers.rds")
 crashes <- readRDS('data/aircraft_crashes.rds')
 
-
 carrier_inList <- function(selectCarrier, a) {
     for (x in selectCarrier) {
         if (!(x %in% a)) {
@@ -125,7 +124,12 @@ carrier_performance_arr_delay <- function(input) {
                         geom_density(alpha = .2) + 
                         ggtitle('DENSITY OF ARRIVAL DELAY') + 
                         xlab('ARRIVAL DELAY IN MINUTES') +
-                        ylab('DENSITY')
+                        ylab('DENSITY') +
+                        theme(plot.title = element_text(size = 16, face = 'bold'),
+                              axis.title.x = element_text(size = 14),
+                              axis.title.y = element_text(size = 14),
+                              axis.text.x = element_text(size = 12),
+                              axis.text.y = element_text(size = 12))
     })
 }
 
@@ -145,7 +149,12 @@ carrier_performance_delay_types <- function(input) {
                          position = 'dodge') +
                 ggtitle('COUNTS OF DELAY TYPES') +
                 xlab('DELAY TYPES') +
-                ylab('COUNTS')
+                ylab('COUNTS') +
+                theme(plot.title = element_text(size = 16, face = 'bold'),
+                      axis.title.x = element_text(size = 14),
+                      axis.title.y = element_text(size = 14),
+                      axis.text.x = element_text(size = 12),
+                      axis.text.y = element_text(size = 12))
     })
 }
 
@@ -162,7 +171,12 @@ carrier_performance_reviews <- function(input) {
                                                labels = 1:10) +
                             ggtitle('DENSITY OF REVIEWS (1-10)') +
                             xlab('REVIEWS (1-10)') +
-                            ylab('DENSITY')
+                            ylab('DENSITY') +
+                            theme(plot.title = element_text(size = 16, face = 'bold'),
+                                  axis.title.x = element_text(size = 14),
+                                  axis.title.y = element_text(size = 14),
+                                  axis.text.x = element_text(size = 12),
+                                  axis.text.y = element_text(size = 12))
           runjs("$('#preloader').fadeOut(1000);")
           perf_plot
         })
@@ -190,7 +204,12 @@ getting_hijacked_crashes <- function(input) {
                width = 0.2) +
       labs(title = 'REASONS FOR PLANE CRASH',
            x = 'INCIDENT TYPE',
-           y = '# OF INCIDENTS / CARRIER')
+           y = '# OF INCIDENTS / CARRIER') +
+      theme(plot.title = element_text(size = 16, face = 'bold'),
+            axis.title.x = element_text(size = 14),
+            axis.title.y = element_text(size = 14),
+            axis.text.x = element_text(size = 10),
+            axis.text.y = element_text(size = 10))
   })
 }
 
