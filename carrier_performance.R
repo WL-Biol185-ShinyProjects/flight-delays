@@ -95,8 +95,7 @@ carrier_performance <- tabPanel("Carrier Performance",
                     multiple = TRUE,
                     choices = carrier_carriers,
                     selected = c('NK', 'F9')
-        ), width = 2
-      ),
+        ), width = 2),
       
       mainPanel = mainPanel(
         fluidRow(
@@ -110,7 +109,6 @@ carrier_performance <- tabPanel("Carrier Performance",
       )
     )
 )
-
 
 carrier_performance_arr_delay <- function(input) { 
     renderPlot({
