@@ -1,4 +1,5 @@
 library(shiny)
+library(httr)
 
 aircrafts <- readRDS("data/aircrafts.rds")
 
@@ -167,7 +168,22 @@ regulatory <- function(input)  {
 aircraft_images <- function(input)  {
   renderUI ({
     
+    query <- input$airplane_model
+    query <- stringr::str_replace_all(query, " ", "%20")
+    response <- GET(paste0("https://commons.wikimedia.org/w/api.php?action=query&list=search&srnamespace=6&srsearch=", query, "&srlimit=20&sroffset=20&prop=imageinfo&format=json"))
     
+    file <- response %>%
+      content(as = "text") %>%
+      stringr::str_extract('(?<="title":")(.{1,300})(?=","pageid)')
+    
+    file <- stringr::str_replace_all(file, " ", "%20")
+    img <- GET(paste0("https://commons.wikimedia.org/w/api.php?action=query&titles=", file, "&prop=imageinfo&iiprop=url&format=json"))
+    
+    link <- img %>%
+      content(as = "text") %>%
+      stringr::str_extract_all('(?<="url":")(.{1,100})(?=","descriptionurl)')
+    
+    img(src = link, width = "500px", height = "auto")
     
   })
   
