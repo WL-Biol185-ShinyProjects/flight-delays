@@ -181,7 +181,7 @@ aircraft_images <- function(input)  {
     
     link <- img %>%
       content(as = "text") %>%
-      stringr::str_extract_all('(?<="url":")(.{1,100})(?=","descriptionurl)')
+      stringr::str_extract('(?<="url":")(.{1,100})(?=","descriptionurl)')
     
     img(src = link, width = "500px", height = "auto")
     
