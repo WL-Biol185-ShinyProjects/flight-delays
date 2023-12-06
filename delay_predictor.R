@@ -84,7 +84,7 @@ delay_predictor_map <- function(input) {  renderLeaflet({
                                                   addPolylines()
                                               } else {
                                                 leaflet() %>% 
-                                                  addTiles() %>%
+                                                  addProviderTiles(providers$NASAGIBS.ViirsEarthAtNight2012) %>%
                                                   setView(lng = -96.25, lat = 39.50, zoom = 5)
                                               }
                                             } else {
