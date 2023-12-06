@@ -91,6 +91,5 @@ function(input, output, session) {
   
   output$flight_seat <- flight_seat(input)
   output$crashes_typePlot <- getting_hijacked_crashes(input)
-  output$crash_expected_table <- crash_expected_table(input)
 
 }

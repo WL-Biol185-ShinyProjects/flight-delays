@@ -108,7 +108,7 @@ carrier_performance <- tabPanel("Carrier Performance",
         h3('Density of Reviews'),
         p('Shows the density of passenger reviews from 1-10.'),
         h3('Reasons for Plane Crash'),
-        p('Shows the number of plane crashes categorically by incident type. Damage to aircraft was either repairable or irrepairable.')
+        p('Shows number of incidents by type for selected carriers. Incidents are either repairable or irrepairable.')
         ),
       
       mainPanel = mainPanel(
@@ -118,7 +118,7 @@ carrier_performance <- tabPanel("Carrier Performance",
         ),
         fluidRow(
           column(6, uiOutput('reviewsPlot')),
-          column(6, plotOutput('crashes_typePlot'), uiOutput('crash_expected_table'))
+          column(6, plotOutput('crashes_typePlot'))
         ), width = 10
       )
     )
@@ -201,46 +201,32 @@ carrier_performance_reviews <- function(input) {
 
 getting_hijacked_crashes <- function(input) {
   renderPlot({
-    crashes %>%
-      mutate(INCIDENT_TYPE = case_when(
-        INCIDENT_TYPE == "Accident | repairable-damage" ~ "Repairable Accident",
-        INCIDENT_TYPE == "Accident | hull-loss" ~ "Irrepairable Accident",
-        INCIDENT_TYPE == "Hijacking | hull-loss" ~ "Irrepairable Hijacking",
-        INCIDENT_TYPE == "Hijacking | repairable-damage" ~ "Repairable Hijacking",
-        INCIDENT_TYPE == "other occurrence (ground fire, sabotage) | hull-loss" ~ "Other (irrepairable)",
-        INCIDENT_TYPE == "other occurrence (ground fire, sabotage) | repairable-damage" ~ "Other (repairable)",
-        INCIDENT_TYPE == "Criminal occurrence (sabotage, shoot down) | repairable-damage" ~ "Criminal (repairable)",
-        INCIDENT_TYPE == "Criminal occurrence (sabotage, shoot down) | hull-loss" ~ "Criminal (irrepairable)")) %>%
-      filter(OP_CARRIER %in% input$selectCarrier) %>%
-      count(INCIDENT_TYPE) %>%
-      ggplot(aes(INCIDENT_TYPE, n, fill = INCIDENT_TYPE)) +
-      geom_bar(stat = 'identity',
-               position = 'dodge',
-               width = 0.2) +
-      labs(title = 'REASONS FOR PLANE CRASH',
-           x = 'INCIDENT TYPE',
-           y = '# OF INCIDENTS / CARRIER') +
-      theme(plot.title = element_text(size = 16, face = 'bold'),
-            axis.title.x = element_text(size = 14),
-            axis.title.y = element_text(size = 14),
-            axis.text.x = element_text(size = 12),
-            axis.text.y = element_text(size = 12),
-            legend.text = element_text(size = 12))
+      crashes %>%
+          mutate(INCIDENT_TYPE = case_when(
+              INCIDENT_TYPE == "Accident | repairable-damage" ~ "Repairable Accident",
+              INCIDENT_TYPE == "Accident | hull-loss" ~ "Irrepairable Accident",
+              INCIDENT_TYPE == "Hijacking | hull-loss" ~ "Irrepairable Hijacking",
+              INCIDENT_TYPE == "Hijacking | repairable-damage" ~ "Repairable Hijacking",
+              INCIDENT_TYPE == "other occurrence (ground fire, sabotage) | hull-loss" ~ "Other (irrepairable)",
+              INCIDENT_TYPE == "other occurrence (ground fire, sabotage) | repairable-damage" ~ "Other (repairable)",
+              INCIDENT_TYPE == "Criminal occurrence (sabotage, shoot down) | repairable-damage" ~ "Criminal (repairable)",
+              INCIDENT_TYPE == "Criminal occurrence (sabotage, shoot down) | hull-loss" ~ "Criminal (irrepairable)")) %>%
+          filter(OP_CARRIER %in% input$selectCarrier) %>%
+          count(INCIDENT_TYPE, OP_CARRIER) %>%
+          ggplot(aes(x = OP_CARRIER, 
+                     y = n, 
+                     fill = INCIDENT_TYPE)) +
+              geom_bar(stat = 'identity',
+                       position = 'fill',
+                       width = 0.2) +
+              labs(title = 'REASONS FOR PLANE CRASH',
+                   x = 'CARRIER',
+                   y = '# OF INCIDENTS') +
+              theme(plot.title = element_text(size = 16, face = 'bold'),
+                    axis.title.x = element_text(size = 14),
+                    axis.title.y = element_text(size = 14),
+                    axis.text.x = element_text(size = 12),
+                    axis.text.y = element_text(size = 12),
+                    legend.text = element_text(size = 12))
   })
 }
-
-crash_expected_table <- function(input) { 
-  renderUI({ 
-    crash_hijacked <- 100 * (nrow(filter(crashes, 
-                                         OP_CARRIER == input$selectCarrier & (INCIDENT_TYPE == "Hijacking | repairable-damage" | INCIDENT_TYPE == "Hijacking | hull-loss" | INCIDENT_TYPE == "Criminal occurrence (sabotage, shoot down) | repairable-damage" | INCIDENT_TYPE == "Criminal occurrence (sabotage, shoot down) | hull-loss")))/nrow(filter(crashes, 
-                                                                                                                                                                                                                                                                                                                                                         OP_CARRIER == input$selectCarrier)))
-    crash_collision <- 100 * (nrow(filter(crashes,
-                                          OP_CARRIER == input$selectCarrier & (INCIDENT_TYPE == "Accident | repairable-damage" | INCIDENT_TYPE == "Accident | hull-loss" | INCIDENT_TYPE == "other occurrence (ground fire, sabotage) | hull-loss" | INCIDENT_TYPE == "other occurrence (ground fire, sabotage) | repairable-damage")))/nrow(filter(crashes,   
-                                                                                                                                                                                                                                                                                                                                                    OP_CARRIER == input$selectCarrier)))
-    
-    tagList(
-      p(strong("Percentage of Crashes due to Hijacking: "), format(crash_hijacked, digits = 2), "%"),
-      p(strong("Percentage of Crashes due to Collision or Engine Failure: "), format(crash_collision, digits = 2), "%"),
-    )
-  })
-} 
