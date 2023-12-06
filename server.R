@@ -32,7 +32,7 @@ function(input, output, session) {
   
   observeEvent(input$landingHelp, {
     dialog <- modalDialog( title = "Landing Gear Information"
-                            , tags$div("Visit the Federal Aviation Administration's Order 5300.7 regarding landing gear classifications", tags$a(href = "https://www.faa.gov/documentLibrary/media/Order/Construction_5300_7.pdf", "HERE"))
+                            , tags$div("Visit the Federal Aviation Administration's Order 5300.7 regarding landing gear classifications", tags$a(target = "_blank", href = "https://www.faa.gov/documentLibrary/media/Order/Construction_5300_7.pdf", "HERE"))
                             , easyClose = TRUE
                             , fade = TRUE
                           )
@@ -62,7 +62,7 @@ function(input, output, session) {
   observeEvent(input$regulatoryHelp, {
     dialog <- modalDialog( title = "FAA Regulatory Designations"
                            , h4("Consolidated Wake Turbulence Category (CWT)")
-                           , tags$div("Visit the Federal Aviation Administration's Order JO 7110.126B regarding CWT categories", tags$a(href = "https://www.faa.gov/documentLibrary/media/Order/2021-11-08_JO_7110.126B_Consolidated_Wake_Turbulence__FINAL.pdf", "HERE"))
+                           , tags$div("Visit the Federal Aviation Administration's Order JO 7110.126B regarding CWT categories", tags$a(target = "_blank", href = "https://www.faa.gov/documentLibrary/media/Order/2021-11-08_JO_7110.126B_Consolidated_Wake_Turbulence__FINAL.pdf", "HERE"))
                            , h4("Aircaft Approach Category (AAC)")
                            , p("Category A: speed less than 91 knots")
                            , p("Category B: speed greater than 91 knots but less than 121 knots")

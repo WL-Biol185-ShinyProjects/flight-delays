@@ -141,7 +141,8 @@ carrier_performance_arr_delay <- function(input) {
                               axis.title.x = element_text(size = 14),
                               axis.title.y = element_text(size = 14),
                               axis.text.x = element_text(size = 12),
-                              axis.text.y = element_text(size = 12))
+                              axis.text.y = element_text(size = 12),
+                              legend.text = element_text(size = 12))
     })
 }
 
@@ -166,7 +167,8 @@ carrier_performance_delay_types <- function(input) {
                       axis.title.x = element_text(size = 14),
                       axis.title.y = element_text(size = 14),
                       axis.text.x = element_text(size = 12),
-                      axis.text.y = element_text(size = 12))
+                      axis.text.y = element_text(size = 12),
+                      legend.text = element_text(size = 12))
     })
 }
 
@@ -188,7 +190,8 @@ carrier_performance_reviews <- function(input) {
                                   axis.title.x = element_text(size = 14),
                                   axis.title.y = element_text(size = 14),
                                   axis.text.x = element_text(size = 12),
-                                  axis.text.y = element_text(size = 12))
+                                  axis.text.y = element_text(size = 12),
+                                  legend.text = element_text(size = 12))
           runjs("$('#preloader').fadeOut(1000);")
           perf_plot
         })
@@ -220,8 +223,9 @@ getting_hijacked_crashes <- function(input) {
       theme(plot.title = element_text(size = 16, face = 'bold'),
             axis.title.x = element_text(size = 14),
             axis.title.y = element_text(size = 14),
-            axis.text.x = element_text(size = 10),
-            axis.text.y = element_text(size = 10))
+            axis.text.x = element_text(size = 12),
+            axis.text.y = element_text(size = 12),
+            legend.text = element_text(size = 12))
   })
 }
 
