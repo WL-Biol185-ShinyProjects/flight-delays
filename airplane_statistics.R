@@ -183,7 +183,13 @@ aircraft_images <- function(input)  {
       content(as = "text") %>%
       stringr::str_extract('(?<="url":")(.{1,100})(?=","descriptionurl)')
     
-    img(src = link, width = "500px", height = "auto")
+    if (!is.null (link)) {
+    
+      img(src = link, width = "500px", height = "auto")
+    }
+    else {
+      p("No images available for the selected aircraft")
+    }
     
   })
   
