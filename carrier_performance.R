@@ -218,7 +218,7 @@ getting_hijacked_crashes <- function(input) {
                      y = n, 
                      fill = INCIDENT_TYPE)) +
               geom_bar(stat = 'identity',
-                       position = 'fill',
+                       position = 'stack',
                        width = 0.2) +
               labs(title = 'REASONS FOR PLANE CRASH',
                    x = 'CARRIER',
