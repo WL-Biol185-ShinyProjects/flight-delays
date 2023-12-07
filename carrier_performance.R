@@ -185,7 +185,11 @@ carrier_performance_reviews <- function(input) {
                             geom_tile(color = 'white',
                                       lwd = 0.5,
                                       linetype = 1) +
-                            scale_fill_gradient(low = 'blue', high = 'red') +
+                            geom_text(aes(label = n), 
+                                      color = 'white', 
+                                      size = 3) +
+                            scale_fill_gradient(low = 'blue', 
+                                                high = 'red') +
                             guides(fill = guide_colourbar(title = 'COUNTS',
                                                           ticks = FALSE)) +
                             ggtitle('COUNTS OF REVIEWS (1-10)') +
