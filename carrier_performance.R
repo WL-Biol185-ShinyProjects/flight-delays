@@ -94,7 +94,7 @@ carrier_performance <- tabPanel("Carrier Performance",
                     'Aircraft Carrier',
                     multiple = TRUE,
                     choices = carrier_carriers,
-                    selected = c('NK', 'F9')
+                    selected = c('NK', 'UA')
         ), width = 2, 
         h3('Density of Arrival Delay'),
         p('Shows the density of arrival delay by domestic carrier.'),
@@ -182,8 +182,12 @@ carrier_performance_reviews <- function(input) {
                         ggplot(aes(OP_CARRIERS,
                                    REVIEWS,
                                    fill = n)) +
-                            geom_tile() +
+                            geom_tile(color = 'white',
+                                      lwd = 0.5,
+                                      linetype = 1) +
                             scale_fill_gradient(low = 'blue', high = 'red') +
+                            guides(fill = guide_colourbar(title = 'COUNTS',
+                                                          ticks = FALSE)) +
                             ggtitle('COUNTS OF REVIEWS (1-10)') +
                             xlab('CARRIERS') +
                             ylab('REVIEWS (1-10)') +
