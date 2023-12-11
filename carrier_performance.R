@@ -182,11 +182,11 @@ carrier_performance_reviews <- function(input) {
                         ggplot(aes(OP_CARRIERS,
                                    REVIEWS,
                                    fill = n)) +
-                            scale_y_continuous(breaks = 1:10,
-                                               labels = 1:10) +
                             geom_tile(color = 'white',
                                       lwd = 0.5,
                                       linetype = 1) +
+                            scale_y_continuous(breaks = 1:10, 
+                                               labels = 1:10) +
                             geom_text(aes(label = n), 
                                       color = 'white', 
                                       size = 3) +
