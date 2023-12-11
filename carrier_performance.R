@@ -188,6 +188,8 @@ carrier_performance_reviews <- function(input) {
                             geom_text(aes(label = n), 
                                       color = 'white', 
                                       size = 3) +
+                            scale_y_continuous(breaks = 1:10,
+                                               labels = 1:10) +
                             scale_fill_gradient(low = 'blue', 
                                                 high = 'red') +
                             guides(fill = guide_colourbar(title = 'COUNTS',
