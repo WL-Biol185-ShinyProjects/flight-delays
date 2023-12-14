@@ -94,7 +94,7 @@ carrier_performance <- tabPanel("Carrier Performance",
                     'Aircraft Carrier',
                     multiple = TRUE,
                     choices = carrier_carriers,
-                    selected = c('NK', 'F9')
+                    selected = c('NK', 'UA')
         ), width = 2, 
         h3('Density of Arrival Delay'),
         p('Shows the density of arrival delay by domestic carrier.'),
@@ -105,8 +105,8 @@ carrier_performance <- tabPanel("Carrier Performance",
           NAS delay - delay forced by the National Airspace System (heavy traffic, air traffic control).
           Security delay - delay caused by safety concerns, re-boarding, or evacuation. 
           Weather - delay caused by extreme, hazardous weather.'),
-        h3('Density of Reviews'),
-        p('Shows the density of passenger reviews from 1-10.'),
+        h3('Counts of Reviews'),
+        p('Shows the counts of reviews (1-10) by carrier. Blue = low count and red = large count.'),
         h3('Reasons for Plane Crash'),
         p('Shows number of incidents by type for selected carriers. Incidents are either repairable or irrepairable.')
         ),
@@ -178,14 +178,25 @@ carrier_performance_reviews <- function(input) {
           runjs("$('#preloader').fadeIn(100);")
           perf_plot <- reviews %>%
                         filter(OP_CARRIERS %in% input$selectCarrier) %>%
-                        ggplot(aes(REVIEWS,
-                                   fill = OP_CARRIERS)) +
-                            geom_density(alpha = .2) +
-                            scale_x_continuous(breaks = 1:10, 
+                        count(REVIEWS, OP_CARRIERS) %>%
+                        ggplot(aes(OP_CARRIERS,
+                                   REVIEWS,
+                                   fill = n)) +
+                            geom_tile(color = 'white',
+                                      lwd = 0.5,
+                                      linetype = 1) +
+                            scale_y_continuous(breaks = 1:10, 
                                                labels = 1:10) +
-                            ggtitle('DENSITY OF REVIEWS (1-10)') +
-                            xlab('REVIEWS (1-10)') +
-                            ylab('DENSITY') +
+                            geom_text(aes(label = n), 
+                                      color = 'white', 
+                                      size = 3) +
+                            scale_fill_gradient(low = 'blue', 
+                                                high = 'red') +
+                            guides(fill = guide_colourbar(title = 'COUNTS',
+                                                          ticks = FALSE)) +
+                            ggtitle('COUNTS OF REVIEWS (1-10)') +
+                            xlab('CARRIERS') +
+                            ylab('REVIEWS (1-10)') +
                             theme(plot.title = element_text(size = 16, face = 'bold'),
                                   axis.title.x = element_text(size = 14),
                                   axis.title.y = element_text(size = 14),
