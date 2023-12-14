@@ -9,7 +9,7 @@ get_airplanestats <- function(name) {
 }
 
 airplane_statistics <- tabPanel("Airplane Information",
-  tags$style(type = "text/css", "#landing-info { display: inline }", "#engine-info { display: inline }", "#regulatory-info { display: inline }"),
+  tags$style(type = "text/css", ".fas { font-size: 10px; } .btn { padding: 2px 10px !important; margin-bottom: 5px; } #landing-info { display: inline }", "#engine-info { display: inline }", "#regulatory-info { display: inline }"),
   fluidPage(
     fluidRow(
         column(12,

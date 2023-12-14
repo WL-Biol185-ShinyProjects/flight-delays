@@ -111,7 +111,12 @@ delay_expected_table <- function(input) { renderUI({
                                             delay_orig <- input$delay_origin
                                             delay_dest <- input$delay_dest
                                             delay_time <- as.numeric(strftime(input$delay_time, "%H%m"))
-                                            delay_carrier_table <- readRDS(paste0("data/", input$delay_carrier, "_full.rds"))
+                                            
+                                            if (isTruthy(input$delay_carrier)) {
+                                              delay_carrier_table <- readRDS(paste0("data/", input$delay_carrier, "_full.rds"))
+                                            } else {
+                                              tagList(p("Select an applicable carrier to view statistics"))
+                                            }
                                             
                                             delay_df <- delay_carrier_table %>% 
                                                           filter((ORIGIN == delay_orig & DEST == delay_dest) & (delay_time > (CRS_DEP_TIME - 100) & delay_time < (CRS_DEP_TIME + 100)))

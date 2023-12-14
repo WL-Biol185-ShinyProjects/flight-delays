@@ -31,6 +31,15 @@ function(input, output, session) {
   output$regulatory <- regulatory(input)
   output$aircraft_images <- aircraft_images(input)
   
+  observeEvent(input$seats, {
+    dialog <- modalDialog( title = "How we chose these seats"
+                         , tags$div(tags$p("Seat choice has been optimized to not be on the side closest to the sun, so that you aren't blinded when you or someone else opens the window shade."), tags$ul(tags$li("Eastbound: Left side"), tags$li("Westbound: Right side"), tags$li("Northbound (morning): Left side"), tags$li("Northbound (afternoon): Right side"), tags$li("Southbound (morning): Right side"), tags$li("Southbound (afternoon): Left side")))
+                         , easyClose = TRUE
+                         , fade = TRUE
+                         )
+    showModal(dialog)
+  })
+  
   observeEvent(input$landingHelp, {
     dialog <- modalDialog( title = "Landing Gear Information"
                             , tags$div("Visit the Federal Aviation Administration's Order 5300.7 regarding landing gear classifications", tags$a(target = "_blank", href = "https://www.faa.gov/documentLibrary/media/Order/Construction_5300_7.pdf", "HERE"))
@@ -39,9 +48,6 @@ function(input, output, session) {
                           )
     showModal(dialog)
   })
-  
-
-  
   
   observeEvent(input$engineHelp, {
     dialog <- modalDialog( title = "Different Aircraft Engine Types"

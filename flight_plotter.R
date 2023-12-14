@@ -21,7 +21,7 @@ flight_get_coordinates <- function(name) { flight_coordinates <- flight_airport_
                                           }
 
 flight_plotter <- tabPanel( "Flight Plotter",
-                            tags$style(type = "text/css", "html, body { width: 100%; height: 150% } #controls { background-color: rgba(255,255,255,.65); padding: 30px; cursor: move; transition: 1s; } #controls:hover { background-color: rgba(255,255,255,.95); transition: 1s; } .wrapper { position: fixed; top: 100px; left: 0; right: 0; bottom: 0; top: 0; overflow: hidden; padding: 0; } .leaflet-control-container { display: none; } em { font-size: 11px }"),
+                            tags$style(type = "text/css", ".fas { font-size: 10px; } .btn { padding: 2px 10px !important; margin-bottom: 5px; } html, body { width: 100%; height: 150% } #controls { background-color: rgba(255,255,255,.65); padding: 30px; cursor: move; transition: 1s; } #controls:hover { background-color: rgba(255,255,255,.95); transition: 1s; } .wrapper { position: fixed; top: 100px; left: 0; right: 0; bottom: 0; top: 0; overflow: hidden; padding: 0; } .leaflet-control-container { display: none; } em { font-size: 11px }"),
                               div( class = "wrapper",
                                   leafletOutput("flight_route_map", width = "100%", height = "100%" ),
                                   absolutePanel(id = "controls", fixed = TRUE, top = 60, left = "auto", right = 20, bottom = "auto", width = 330, height = "auto",
@@ -141,7 +141,10 @@ flight_plotter <- tabPanel( "Flight Plotter",
                                                                           )
                                                           )
                                                           ),
+                                          h4("Where to sit", style = "display: inline;"),
+                                          actionButton("seats", "", icon = icon("info")),
                                           uiOutput("flight_seat"),
+                                          br(),
                                           checkboxInput("flight_weather", "Show Weather Radar", value = FALSE)
                                                         )
                           )
@@ -323,14 +326,14 @@ flight_seat <- function(input) { renderUI({
                                           # if flying north
                                           if (flight_port_dest[2] > flight_port_orig[2]) {
                                             tagList(
-                                              p(strong("Best seats for flight (if morning): "), "Left side"),
-                                              p(strong("Best seats for flight (if afternoon): "), "Right side")
+                                              p(strong("Flight 1 (morning): "), "Left side"),
+                                              p(strong("Flight 1 (afternoon): "), "Right side")
                                             )
                                           }
                                           else {
                                             tagList(
-                                              p(strong("Best seats for flight (if morning): "), "Right side"),
-                                              p(strong("Best seats for flight (if afternoon): "), "Left side")
+                                              p(strong("Flight 1 (morning): "), "Right side"),
+                                              p(strong("Flight 1 (afternoon): "), "Left side")
                                             )
                                           }
                                           
@@ -339,12 +342,12 @@ flight_seat <- function(input) { renderUI({
                                           # if flying east
                                           if (flight_port_dest[1] > flight_port_orig[1]) {
                                             tagList(
-                                              p(strong("Best seats for flight: "), "Left side")
+                                              p(strong("Flight 1: "), "Left side")
                                             )
                                           }
                                           else {
                                             tagList(
-                                              p(strong("Best seats for flight: "), "Right side")
+                                              p(strong("Flight 1: "), "Right side")
                                             )
                                           }
                                         }
@@ -364,22 +367,22 @@ flight_seat <- function(input) { renderUI({
                                         if (abs(flight_port_mid[2]-flight_port_orig[2]) > abs(flight_port_mid[1]-flight_port_orig[1])) {
                                           # if flying north
                                           if (flight_port_mid[2] > flight_port_orig[2]) {
-                                            writing <- tagAppendChild(writing, tags$p(strong("Best seats for flight 1 (morning): "), "Left side"))
-                                            writing <- tagAppendChild(writing, tags$p(strong("Best seats for flight 1 (afternoon): "), "Right side"))
+                                            writing <- tagAppendChild(writing, tags$p(strong("Flight 1 (morning): "), "Left side"))
+                                            writing <- tagAppendChild(writing, tags$p(strong("Flight 1 (afternoon): "), "Right side"))
                                           }
                                           else {
-                                            writing <- tagAppendChild(writing, tags$p(strong("Best seats for flight 1 (morning): "), "Right side"))
-                                            writing <- tagAppendChild(writing, tags$p(strong("Best seats for flight 1 (afternoon): "), "Left side"))
+                                            writing <- tagAppendChild(writing, tags$p(strong("Flight 1 (morning): "), "Right side"))
+                                            writing <- tagAppendChild(writing, tags$p(strong("Flight 1 (afternoon): "), "Left side"))
                                           }
                                           
                                         } 
                                         else {
                                           # if flying east
                                           if (flight_port_mid[1] > flight_port_orig[1]) {
-                                            writing <- tagAppendChild(writing, tags$p(strong("Best seats for flight 1: "), "Left side"))
+                                            writing <- tagAppendChild(writing, tags$p(strong("Flight 1: "), "Left side"))
                                           }
                                           else {
-                                            writing <- tagAppendChild(writing, tags$p(strong("Best seats for flight 1: "), "Right side"))
+                                            writing <- tagAppendChild(writing, tags$p(strong("Flight 1: "), "Right side"))
                                           }
                                         }
                                         
@@ -388,22 +391,22 @@ flight_seat <- function(input) { renderUI({
                                         if (abs(flight_port_dest[2]-flight_port_mid[2]) > abs(flight_port_dest[1]-flight_port_mid[1])) {
                                           # if flying north
                                           if (flight_port_dest[2] > flight_port_mid[2]) {
-                                            writing <- tagAppendChild(writing, tags$p(strong("Best seats for flight 2 (morning): "), "Left side"))
-                                            writing <- tagAppendChild(writing, tags$p(strong("Best seats for flight 2 (afternoon): "), "Right side"))
+                                            writing <- tagAppendChild(writing, tags$p(strong("Flight 2 (morning): "), "Left side"))
+                                            writing <- tagAppendChild(writing, tags$p(strong("Flight 2 (afternoon): "), "Right side"))
                                           }
                                           else {
-                                            writing <- tagAppendChild(writing, tags$p(strong("Best seats for flight 2 (morning): "), "Right side"))
-                                            writing <- tagAppendChild(writing, tags$p(strong("Best seats for flight 2 (afternoon): "), "Left side"))
+                                            writing <- tagAppendChild(writing, tags$p(strong("Flight 2 (morning): "), "Right side"))
+                                            writing <- tagAppendChild(writing, tags$p(strong("Flight 2 (afternoon): "), "Left side"))
                                           }
                                           
                                         } 
                                         else {
                                           # if flying east
                                           if (flight_port_dest[1] > flight_port_mid[1]) {
-                                            writing <- tagAppendChild(writing, tags$p(strong("Best seats for flight 2: "), "Left side"))
+                                            writing <- tagAppendChild(writing, tags$p(strong("Flight 2: "), "Left side"))
                                           }
                                           else {
-                                            writing <- tagAppendChild(writing, tags$p(strong("Best seats for flight 2: "), "Right side"))
+                                            writing <- tagAppendChild(writing, tags$p(strong("Flight 2: "), "Right side"))
                                           }
                                         }
                                         
@@ -426,22 +429,22 @@ flight_seat <- function(input) { renderUI({
                                         if (abs(flight_port_mid_1[2]-flight_port_orig[2]) > abs(flight_port_mid_1[1]-flight_port_orig[1])) {
                                           # if flying north
                                           if (flight_port_mid_1[2] > flight_port_orig[2]) {
-                                            writing <- tagAppendChild(writing, tags$p(strong("Best seats for flight 1 (morning): "), "Left side"))
-                                            writing <- tagAppendChild(writing, tags$p(strong("Best seats for flight 1 (afternoon): "), "Right side"))
+                                            writing <- tagAppendChild(writing, tags$p(strong("Flight 1 (morning): "), "Left side"))
+                                            writing <- tagAppendChild(writing, tags$p(strong("Flight 1 (afternoon): "), "Right side"))
                                           }
                                           else {
-                                            writing <- tagAppendChild(writing, tags$p(strong("Best seats for flight 1 (morning): "), "Right side"))
-                                            writing <- tagAppendChild(writing, tags$p(strong("Best seats for flight 1 (afternoon): "), "Left side"))
+                                            writing <- tagAppendChild(writing, tags$p(strong("Flight 1 (morning): "), "Right side"))
+                                            writing <- tagAppendChild(writing, tags$p(strong("Flight 1 (afternoon): "), "Left side"))
                                           }
                                           
                                         } 
                                         else {
                                           # if flying east
                                           if (flight_port_mid_1[1] > flight_port_orig[1]) {
-                                            writing <- tagAppendChild(writing, tags$p(strong("Best seats for flight 1: "), "Left side"))
+                                            writing <- tagAppendChild(writing, tags$p(strong("Flight 1: "), "Left side"))
                                           }
                                           else {
-                                            writing <- tagAppendChild(writing, tags$p(strong("Best seats for flight 1: "), "Right side"))
+                                            writing <- tagAppendChild(writing, tags$p(strong("Flight 1: "), "Right side"))
                                           }
                                         }
                                         
@@ -450,22 +453,22 @@ flight_seat <- function(input) { renderUI({
                                         if (abs(flight_port_mid_2[2]-flight_port_mid_1[2]) > abs(flight_port_mid_2[1]-flight_port_mid_1[1])) {
                                           # if flying north
                                           if (flight_port_mid_2[2] > flight_port_mid_1[2]) {
-                                            writing <- tagAppendChild(writing, tags$p(strong("Best seats for flight 2 (morning): "), "Left side"))
-                                            writing <- tagAppendChild(writing, tags$p(strong("Best seats for flight 2 (afternoon): "), "Right side"))
+                                            writing <- tagAppendChild(writing, tags$p(strong("Flight 2 (morning): "), "Left side"))
+                                            writing <- tagAppendChild(writing, tags$p(strong("Flight 2 (afternoon): "), "Right side"))
                                           }
                                           else {
-                                            writing <- tagAppendChild(writing, tags$p(strong("Best seats for flight 2 (morning): "), "Right side"))
-                                            writing <- tagAppendChild(writing, tags$p(strong("Best seats for flight 2 (afternoon): "), "Left side"))
+                                            writing <- tagAppendChild(writing, tags$p(strong("Flight 2 (morning): "), "Right side"))
+                                            writing <- tagAppendChild(writing, tags$p(strong("Flight 2 (afternoon): "), "Left side"))
                                           }
                                           
                                         } 
                                         else {
                                           # if flying east
                                           if (flight_port_mid_2[1] > flight_port_mid_1[1]) {
-                                            writing <- tagAppendChild(writing, tags$p(strong("Best seats for flight 2: "), "Left side"))
+                                            writing <- tagAppendChild(writing, tags$p(strong("Flight 2: "), "Left side"))
                                           }
                                           else {
-                                            writing <- tagAppendChild(writing, tags$p(strong("Best seats for flight 2: "), "Right side"))
+                                            writing <- tagAppendChild(writing, tags$p(strong("Flight 2: "), "Right side"))
                                           }
                                         }
                                         
@@ -474,22 +477,22 @@ flight_seat <- function(input) { renderUI({
                                         if (abs(flight_port_dest[2]-flight_port_mid_2[2]) > abs(flight_port_dest[1]-flight_port_mid_2[1])) {
                                           # if flying north
                                           if (flight_port_dest[2] > flight_port_mid_2[2]) {
-                                            writing <- tagAppendChild(writing, tags$p(strong("Best seats for flight 3 (morning): "), "Left side"))
-                                            writing <- tagAppendChild(writing, tags$p(strong("Best seats for flight 3 (afternoon): "), "Right side"))
+                                            writing <- tagAppendChild(writing, tags$p(strong("Flight 3 (morning): "), "Left side"))
+                                            writing <- tagAppendChild(writing, tags$p(strong("Flight 3 (afternoon): "), "Right side"))
                                           }
                                           else {
-                                            writing <- tagAppendChild(writing, tags$p(strong("Best seats for flight 3 (morning): "), "Right side"))
-                                            writing <- tagAppendChild(writing, tags$p(strong("Best seats for flight 3 (afternoon): "), "Left side"))
+                                            writing <- tagAppendChild(writing, tags$p(strong("Flight 3 (morning): "), "Right side"))
+                                            writing <- tagAppendChild(writing, tags$p(strong("Flight 3 (afternoon): "), "Left side"))
                                           }
                                           
                                         } 
                                         else {
                                           # if flying east
                                           if (flight_port_dest[1] > flight_port_mid_2[1]) {
-                                            writing <- tagAppendChild(writing, tags$p(strong("Best seats for flight 3: "), "Left side"))
+                                            writing <- tagAppendChild(writing, tags$p(strong("Flight 3: "), "Left side"))
                                           }
                                           else {
-                                            writing <- tagAppendChild(writing, tags$p(strong("Best seats for flight 3: "), "Right side"))
+                                            writing <- tagAppendChild(writing, tags$p(strong("Flight 3: "), "Right side"))
                                           }
                                         }
                                         

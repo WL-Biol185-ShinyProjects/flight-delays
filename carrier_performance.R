@@ -215,7 +215,8 @@ getting_hijacked_crashes <- function(input) {
           count(INCIDENT_TYPE, OP_CARRIER) %>%
           ggplot(aes(x = OP_CARRIER, 
                      y = n, 
-                     fill = INCIDENT_TYPE)) +
+                     fill = INCIDENT_TYPE,
+                     label = n)) +
               geom_bar(stat = 'identity',
                        position = 'stack',
                        width = 0.2) +
@@ -227,6 +228,7 @@ getting_hijacked_crashes <- function(input) {
                     axis.title.y = element_text(size = 14),
                     axis.text.x = element_text(size = 12),
                     axis.text.y = element_text(size = 12),
-                    legend.text = element_text(size = 12))
+                    legend.text = element_text(size = 12)) +
+              geom_text(size = 5, position = position_stack(vjust = 0.5))
   })
 }

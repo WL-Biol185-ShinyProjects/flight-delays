@@ -238,3 +238,26 @@ airplane_crashes <- airplane_crashes %>%
 
 ```
 
+```{r}
+carriers_list <- c( "Endeavor Air" = "9E"
+                  , "American Airlines" = "AA"
+                  , "Envoy Air" = "MQ"
+                  , "Allegiant Air" = "G4"
+                  , "Jetstream Intl" = "OH"
+                  , "Jetblue Airways" = "B6"
+                  , "Mesa Airlines" = "YV"
+                  , "ExpressJet Airlines" = "EV"
+                  , "Frontier Airlines" = "F9"
+                  , "Republic Airlines" = "YX"
+                  , "Hawaiian Airlines" = "HA"
+                  , "Spirit Airlines" = "NK"
+                  , "United Airlines" = "UA"
+                  , "Skywest Airlines" = "OO"
+                  , "Southwest Airlines" = "WN"
+                  , "Alaska Airlines" = "AS"
+                  , "Delta Air Lines" = "DL"
+                  )
+
+saveRDS(carriers_list, "data/carriers.rds")
+```
+
