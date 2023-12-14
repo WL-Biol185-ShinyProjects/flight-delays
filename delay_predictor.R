@@ -108,15 +108,15 @@ delay_predictor_map <- function(input) {  renderLeaflet({
                                         }
 
 delay_expected_table <- function(input) { renderUI({
+                                            if (isTruthy(input$delay_carrier) & isTruthy(input$delay_origin) & isTruthy(input$delay_dest)) {
+                                              delay_carrier_table <- readRDS(paste0("data/", input$delay_carrier, "_full.rds"))
+                                            } else {
+                                              return(strong("Select all options to view statistics"))
+                                            }
+                                            
                                             delay_orig <- input$delay_origin
                                             delay_dest <- input$delay_dest
                                             delay_time <- as.numeric(strftime(input$delay_time, "%H%m"))
-                                            
-                                            if (isTruthy(input$delay_carrier)) {
-                                              delay_carrier_table <- readRDS(paste0("data/", input$delay_carrier, "_full.rds"))
-                                            } else {
-                                              tagList(p("Select an applicable carrier to view statistics"))
-                                            }
                                             
                                             delay_df <- delay_carrier_table %>% 
                                                           filter((ORIGIN == delay_orig & DEST == delay_dest) & (delay_time > (CRS_DEP_TIME - 100) & delay_time < (CRS_DEP_TIME + 100)))

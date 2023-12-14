@@ -4,7 +4,6 @@ library(shiny)
 library(geosphere)
 library(ggplot2)
 library(dplyr)
-library(httr)
 
 source("flight_plotter.R")
 source("delay_predictor.R")
